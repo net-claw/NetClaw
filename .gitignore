@@ -21,6 +21,7 @@ backend/**/appsettings.json
 backend/**/appsettings.Development.json
 backend/**/appsettings.Sample.json
 backend/**/appsettings.test.json
+backend/Src/NetClaw.Api/skills/
 
 # ── Dependencies ─────────────────────────────────────────────────────────────
 frontend/node_modules/
