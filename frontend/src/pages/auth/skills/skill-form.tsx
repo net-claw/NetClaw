@@ -28,10 +28,10 @@ const emptyValues: SkillFormValues = {
   name: "",
   slug: "",
   description: "",
-  file_name: "",
+  fileName: "",
   content: "",
   status: "active",
-  metadata_json: "",
+  metadataJson: "",
 }
 
 export function SkillForm({
@@ -88,7 +88,7 @@ export function SkillForm({
 
         <div className="grid gap-5 md:grid-cols-2">
           <ControlledField
-            name="file_name"
+            name="fileName"
             control={form.control}
             label={t("skills.form.fileName")}
             placeholder={t("skills.form.fileNamePlaceholder")}
@@ -134,7 +134,7 @@ export function SkillForm({
         />
 
         <ControlledField
-          name="metadata_json"
+          name="metadataJson"
           control={form.control}
           label={t("skills.form.metadataJson")}
           placeholder={t("skills.form.metadataJsonPlaceholder")}

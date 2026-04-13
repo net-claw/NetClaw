@@ -31,13 +31,13 @@ import {
 import { appIcons } from "@/lib/icons"
 
 const emptyValues: UpdateGovernanceSettingModel = {
-  enable_builtin_prompt_injection: true,
-  enable_custom_prompt_injection: true,
-  enable_audit: true,
-  enable_metrics: true,
-  enable_circuit_breaker: false,
-  builtin_detector_config: null,
-  is_active: true,
+  enableBuiltinPromptInjection: true,
+  enableCustomPromptInjection: true,
+  enableAudit: true,
+  enableMetrics: true,
+  enableCircuitBreaker: false,
+  builtinDetectorConfig: null,
+  isActive: true,
 }
 
 export default function GovernancePage() {
@@ -59,13 +59,13 @@ export default function GovernancePage() {
     }
 
     form.reset({
-      enable_builtin_prompt_injection: data.enable_builtin_prompt_injection,
-      enable_custom_prompt_injection: data.enable_custom_prompt_injection,
-      enable_audit: data.enable_audit,
-      enable_metrics: data.enable_metrics,
-      enable_circuit_breaker: data.enable_circuit_breaker,
-      builtin_detector_config: data.builtin_detector_config ?? null,
-      is_active: data.is_active,
+      enableBuiltinPromptInjection: data.enableBuiltinPromptInjection,
+      enableCustomPromptInjection: data.enableCustomPromptInjection,
+      enableAudit: data.enableAudit,
+      enableMetrics: data.enableMetrics,
+      enableCircuitBreaker: data.enableCircuitBreaker,
+      builtinDetectorConfig: data.builtinDetectorConfig ?? null,
+      isActive: data.isActive,
     })
   }, [data, form])
 
@@ -94,14 +94,14 @@ export default function GovernancePage() {
             <FieldGroup>
               <SettingCheckbox
                 control={form.control}
-                name="is_active"
+                name="isActive"
                 label={t("governance.form.isActive")}
                 description={t("governance.form.isActiveHelp")}
               />
 
               <SettingCheckbox
                 control={form.control}
-                name="enable_builtin_prompt_injection"
+                name="enableBuiltinPromptInjection"
                 label={t("governance.form.enableBuiltinPromptInjection")}
                 description={t(
                   "governance.form.enableBuiltinPromptInjectionHelp"
@@ -110,7 +110,7 @@ export default function GovernancePage() {
 
               <SettingCheckbox
                 control={form.control}
-                name="enable_custom_prompt_injection"
+                name="enableCustomPromptInjection"
                 label={t("governance.form.enableCustomPromptInjection")}
                 description={t(
                   "governance.form.enableCustomPromptInjectionHelp"
@@ -119,27 +119,27 @@ export default function GovernancePage() {
 
               <SettingCheckbox
                 control={form.control}
-                name="enable_audit"
+                name="enableAudit"
                 label={t("governance.form.enableAudit")}
                 description={t("governance.form.enableAuditHelp")}
               />
 
               <SettingCheckbox
                 control={form.control}
-                name="enable_metrics"
+                name="enableMetrics"
                 label={t("governance.form.enableMetrics")}
                 description={t("governance.form.enableMetricsHelp")}
               />
 
               <SettingCheckbox
                 control={form.control}
-                name="enable_circuit_breaker"
+                name="enableCircuitBreaker"
                 label={t("governance.form.enableCircuitBreaker")}
                 description={t("governance.form.enableCircuitBreakerHelp")}
               />
 
               <ControlledField
-                name="builtin_detector_config"
+                name="builtinDetectorConfig"
                 control={form.control}
                 label={t("governance.form.builtinDetectorConfig")}
                 placeholder={t("governance.form.builtinDetectorConfigPlaceholder")}
@@ -164,12 +164,12 @@ export default function GovernancePage() {
 type SettingCheckboxProps = {
   control: Control<UpdateGovernanceSettingModel>
   name:
-    | "is_active"
-    | "enable_builtin_prompt_injection"
-    | "enable_custom_prompt_injection"
-    | "enable_audit"
-    | "enable_metrics"
-    | "enable_circuit_breaker"
+    | "isActive"
+    | "enableBuiltinPromptInjection"
+    | "enableCustomPromptInjection"
+    | "enableAudit"
+    | "enableMetrics"
+    | "enableCircuitBreaker"
   label: string
   description: string
 }

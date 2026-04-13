@@ -6,7 +6,7 @@ export const createSkillSchema = z.object({
   name: z.string().min(1, "validation.required"),
   slug: z.string().min(1, "validation.required"),
   description: z.string().min(1, "validation.required"),
-  file_name: z.string().endsWith(".md", "validation.skillFileName"),
+  fileName: z.string().endsWith(".md", "validation.skillFileName"),
   content: z.string().min(1, "validation.required"),
   status: z
     .string()
@@ -14,7 +14,7 @@ export const createSkillSchema = z.object({
       (value) => ["active", "paused", "archived"].includes(value),
       "validation.agentStatus"
     ),
-  metadata_json: z.string().optional(),
+  metadataJson: z.string().optional(),
 })
 
 export type CreateSkillModel = z.infer<typeof createSkillSchema>
@@ -28,13 +28,13 @@ export const skillSchema = z.object({
   name: z.string(),
   slug: z.string(),
   description: z.string(),
-  file_name: z.string(),
+  fileName: z.string(),
   content: z.string(),
   status: z.string(),
-  metadata_json: z.string().nullable().optional(),
-  archive_file_name: z.string().nullable().optional(),
-  created_at: z.string(),
-  updated_at: z.string().nullable().optional(),
+  metadataJson: z.string().nullable().optional(),
+  archiveFileName: z.string().nullable().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string().nullable().optional(),
 })
 
 export type SkillModel = z.infer<typeof skillSchema>

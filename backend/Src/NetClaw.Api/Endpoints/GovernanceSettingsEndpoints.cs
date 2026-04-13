@@ -27,13 +27,13 @@ public sealed class GovernanceSettingsEndpoints : IEndpoint
 
             return Results.Ok(new
             {
-                tool_name = toolName,
+                toolName,
                 input,
                 allowed = result.Allowed,
                 reason = result.Reason,
                 action = result.Action,
-                matched_rule = result.MatchedRule,
-                policy_path = governance.PolicyPath,
+                matchedRule = result.MatchedRule,
+                policyPath = governance.PolicyPath,
             });
         }).RequireAuthorization();
 
@@ -75,13 +75,13 @@ public sealed class GovernanceSettingsEndpoints : IEndpoint
                 setting = new GovernanceSetting(
                     GovernanceScopeType.Global,
                     null,
-                    request.Enable_Builtin_Prompt_Injection,
-                    request.Enable_Custom_Prompt_Injection,
-                    request.Enable_Audit,
-                    request.Enable_Metrics,
-                    request.Enable_Circuit_Breaker,
-                    request.Builtin_Detector_Config,
-                    request.Is_Active,
+                    request.EnableBuiltinPromptInjection,
+                    request.EnableCustomPromptInjection,
+                    request.EnableAudit,
+                    request.EnableMetrics,
+                    request.EnableCircuitBreaker,
+                    request.BuiltinDetectorConfig,
+                    request.IsActive,
                     userName);
 
                 await dbContext.GovernanceSettings.AddAsync(setting, ct);
@@ -89,13 +89,13 @@ public sealed class GovernanceSettingsEndpoints : IEndpoint
             else
             {
                 setting.Update(
-                    request.Enable_Builtin_Prompt_Injection,
-                    request.Enable_Custom_Prompt_Injection,
-                    request.Enable_Audit,
-                    request.Enable_Metrics,
-                    request.Enable_Circuit_Breaker,
-                    request.Builtin_Detector_Config,
-                    request.Is_Active,
+                    request.EnableBuiltinPromptInjection,
+                    request.EnableCustomPromptInjection,
+                    request.EnableAudit,
+                    request.EnableMetrics,
+                    request.EnableCircuitBreaker,
+                    request.BuiltinDetectorConfig,
+                    request.IsActive,
                     userName);
             }
 

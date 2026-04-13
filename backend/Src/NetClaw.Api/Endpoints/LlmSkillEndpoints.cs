@@ -45,10 +45,10 @@ public sealed class LlmSkillEndpoints : IEndpoint
 
             query = (request.OrderBy ?? string.Empty).ToLowerInvariant() switch
             {
-                "file_name" => ascending
+                "filename" => ascending
                     ? query.OrderBy(skill => skill.FileName).ThenBy(skill => skill.Name)
                     : query.OrderByDescending(skill => skill.FileName).ThenByDescending(skill => skill.Name),
-                "updated_at" => ascending
+                "updatedat" => ascending
                     ? query.OrderBy(skill => skill.UpdatedOn ?? skill.CreatedOn).ThenBy(skill => skill.Name)
                     : query.OrderByDescending(skill => skill.UpdatedOn ?? skill.CreatedOn).ThenByDescending(skill => skill.Name),
                 "status" => ascending
@@ -94,7 +94,7 @@ public sealed class LlmSkillEndpoints : IEndpoint
             SkillInstallationService installationService,
             CancellationToken ct) =>
         {
-            var validationError = await ValidateRequestAsync(request.Name, request.Slug, request.File_Name, request.Content, request.Status, request.Metadata_Json, repo, null, ct);
+            var validationError = await ValidateRequestAsync(request.Name, request.Slug, request.FileName, request.Content, request.Status, request.MetadataJson, repo, null, ct);
             if (validationError is not null)
             {
                 return ApiResults.Error(context, StatusCodes.Status400BadRequest, validationError);
@@ -105,17 +105,17 @@ public sealed class LlmSkillEndpoints : IEndpoint
                     request.Name,
                     request.Slug,
                     request.Description,
-                    request.File_Name,
+                    request.FileName,
                     request.Content,
                     request.Status,
-                    request.Metadata_Json),
+                    request.MetadataJson),
                 ct);
 
             var skill = new Skill(
                 request.Name,
                 request.Slug,
                 request.Description,
-                request.File_Name,
+                request.FileName,
                 request.Content,
                 request.Status,
                 metadataJson);
@@ -140,7 +140,7 @@ public sealed class LlmSkillEndpoints : IEndpoint
                 return ApiResults.Error(context, StatusCodes.Status404NotFound, "Skill not found.");
             }
 
-            var validationError = await ValidateRequestAsync(request.Name, request.Slug, request.File_Name, request.Content, request.Status, request.Metadata_Json, repo, skillId, ct);
+            var validationError = await ValidateRequestAsync(request.Name, request.Slug, request.FileName, request.Content, request.Status, request.MetadataJson, repo, skillId, ct);
             if (validationError is not null)
             {
                 return ApiResults.Error(context, StatusCodes.Status400BadRequest, validationError);
@@ -151,17 +151,17 @@ public sealed class LlmSkillEndpoints : IEndpoint
                     request.Name,
                     request.Slug,
                     request.Description,
-                    request.File_Name,
+                    request.FileName,
                     request.Content,
                     request.Status,
-                    request.Metadata_Json),
+                    request.MetadataJson),
                 ct);
 
             skill.Update(
                 request.Name,
                 request.Slug,
                 request.Description,
-                request.File_Name,
+                request.FileName,
                 request.Content,
                 request.Status,
                 metadataJson,

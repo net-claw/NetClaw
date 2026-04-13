@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace NetClaw.Contracts;
 
 public record GetAgentTeamsRequest(
@@ -11,56 +9,56 @@ public record GetAgentTeamsRequest(
     string? Status);
 
 public record CreateAgentTeamMemberRequest(
-    [property: JsonPropertyName("id")] string? Id,
-    [property: JsonPropertyName("agentId")] string AgentId,
-    [property: JsonPropertyName("role")] string? Role,
-    [property: JsonPropertyName("order")] int Order,
-    [property: JsonPropertyName("status")] string Status,
-    [property: JsonPropertyName("reportsToMemberId")] string? ReportsToMemberId,
-    [property: JsonPropertyName("metadataJson")] string? MetadataJson);
+    string? Id,
+    string AgentId,
+    string? Role,
+    int Order,
+    string Status,
+    string? ReportsToMemberId,
+    string? MetadataJson);
 
 public record UpdateAgentTeamMemberRequest(
-    [property: JsonPropertyName("id")] string? Id,
-    [property: JsonPropertyName("agentId")] string AgentId,
-    [property: JsonPropertyName("role")] string? Role,
-    [property: JsonPropertyName("order")] int Order,
-    [property: JsonPropertyName("status")] string Status,
-    [property: JsonPropertyName("reportsToMemberId")] string? ReportsToMemberId,
-    [property: JsonPropertyName("metadataJson")] string? MetadataJson);
+    string? Id,
+    string AgentId,
+    string? Role,
+    int Order,
+    string Status,
+    string? ReportsToMemberId,
+    string? MetadataJson);
 
 public record CreateAgentTeamRequest(
-    [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("description")] string? Description,
-    [property: JsonPropertyName("status")] string Status,
-    [property: JsonPropertyName("metadataJson")] string? MetadataJson,
-    [property: JsonPropertyName("members")] IReadOnlyList<CreateAgentTeamMemberRequest> Members);
+    string Name,
+    string? Description,
+    string Status,
+    string? MetadataJson,
+    IReadOnlyList<CreateAgentTeamMemberRequest> Members);
 
 public record UpdateAgentTeamRequest(
-    [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("description")] string? Description,
-    [property: JsonPropertyName("status")] string Status,
-    [property: JsonPropertyName("metadataJson")] string? MetadataJson,
-    [property: JsonPropertyName("members")] IReadOnlyList<UpdateAgentTeamMemberRequest> Members);
+    string Name,
+    string? Description,
+    string Status,
+    string? MetadataJson,
+    IReadOnlyList<UpdateAgentTeamMemberRequest> Members);
 
 public record AgentTeamMemberResponse(
-    [property: JsonPropertyName("id")] string Id,
-    [property: JsonPropertyName("agentId")] string AgentId,
-    [property: JsonPropertyName("agentName")] string AgentName,
-    [property: JsonPropertyName("role")] string? Role,
-    [property: JsonPropertyName("order")] int Order,
-    [property: JsonPropertyName("status")] string Status,
-    [property: JsonPropertyName("reportsToMemberId")] string? ReportsToMemberId,
-    [property: JsonPropertyName("reportsToMemberName")] string? ReportsToMemberName,
-    [property: JsonPropertyName("metadataJson")] string? MetadataJson,
-    [property: JsonPropertyName("createdAt")] string CreatedAt,
-    [property: JsonPropertyName("updatedAt")] string? UpdatedAt);
+    string Id,
+    string AgentId,
+    string AgentName,
+    string? Role,
+    int Order,
+    string Status,
+    string? ReportsToMemberId,
+    string? ReportsToMemberName,
+    string? MetadataJson,
+    string CreatedAt,
+    string? UpdatedAt);
 
 public record AgentTeamResponse(
-    [property: JsonPropertyName("id")] string Id,
-    [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("description")] string? Description,
-    [property: JsonPropertyName("status")] string Status,
-    [property: JsonPropertyName("metadataJson")] string? MetadataJson,
-    [property: JsonPropertyName("members")] IReadOnlyList<AgentTeamMemberResponse> Members,
-    [property: JsonPropertyName("createdAt")] string CreatedAt,
-    [property: JsonPropertyName("updatedAt")] string? UpdatedAt);
+    string Id,
+    string Name,
+    string? Description,
+    string Status,
+    string? MetadataJson,
+    IReadOnlyList<AgentTeamMemberResponse> Members,
+    string CreatedAt,
+    string? UpdatedAt);

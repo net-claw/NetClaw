@@ -52,7 +52,21 @@ cp backend/Src/NetClaw.Api/appsettings.Example.json backend/Src/NetClaw.Api/apps
 
 Update the `ConnectionStrings.NetClawDb` value to point to your PostgreSQL instance.
 
-### 2. Run the backend
+### 2. Build and install plugins
+
+Plugins are not included in the backend build output — they must be published separately into `backend/Src/NetClaw.Api/plugins/` before running. If this step is skipped, any channel kind provided by a missing plugin will fail at runtime with `Channel kind 'X' is not supported.`
+
+```bash
+# Build and install all plugins at once
+make build-all-plugins
+
+# Or install a single plugin
+make plugin PLUGIN=backend/Plugins/NetClaw.Plugin.Telegram
+```
+
+Each plugin is published to `backend/Src/NetClaw.Api/plugins/<name>/`. Re-run this command after modifying any plugin.
+
+### 3. Run the backend
 
 ```bash
 dotnet run --project backend/Src/NetClaw.Api
@@ -66,7 +80,7 @@ On startup, NetClaw will:
 
 The backend serves the API and, when built, the frontend static assets.
 
-### 3. Run the frontend in development
+### 4. Run the frontend in development
 
 ```bash
 cd frontend
@@ -76,7 +90,7 @@ pnpm dev
 
 The Vite dev server runs on port `5173` by default and proxies `/api` requests to `http://localhost:5000`.
 
-### 4. Run the app and sandbox with Docker
+### 5. Run the app and sandbox with Docker
 
 ```bash
 docker compose up --build

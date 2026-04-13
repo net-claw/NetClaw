@@ -32,8 +32,8 @@ public sealed class LlmTest(LlmTestFixture fixture)
 
         var payload = await response.GetContentAsync<ApiResponse<GovernanceSettingResponse>>();
         Assert.True(payload.Success);
-        Assert.Equal("global", payload.Data.Scope_Type);
-        Assert.True(payload.Data.Is_Active);
+        Assert.Equal("global", payload.Data.ScopeType);
+        Assert.True(payload.Data.IsActive);
         Assert.NotEqual(Guid.Empty.ToString(), payload.Data.Id);
     }
 
@@ -49,14 +49,14 @@ public sealed class LlmTest(LlmTestFixture fixture)
 
         var payload = await response.GetContentAsync<ApiResponse<GovernanceSettingResponse>>();
         Assert.True(payload.Success);
-        Assert.Equal("global", payload.Data.Scope_Type);
-        Assert.Null(payload.Data.Scope_Id);
-        Assert.True(payload.Data.Enable_Builtin_Prompt_Injection);
-        Assert.True(payload.Data.Enable_Custom_Prompt_Injection);
-        Assert.True(payload.Data.Enable_Audit);
-        Assert.True(payload.Data.Enable_Metrics);
-        Assert.False(payload.Data.Enable_Circuit_Breaker);
-        Assert.True(payload.Data.Is_Active);
+        Assert.Equal("global", payload.Data.ScopeType);
+        Assert.Null(payload.Data.ScopeId);
+        Assert.True(payload.Data.EnableBuiltinPromptInjection);
+        Assert.True(payload.Data.EnableCustomPromptInjection);
+        Assert.True(payload.Data.EnableAudit);
+        Assert.True(payload.Data.EnableMetrics);
+        Assert.False(payload.Data.EnableCircuitBreaker);
+        Assert.True(payload.Data.IsActive);
     }
 
     [Fact]
@@ -88,7 +88,7 @@ public sealed class LlmTest(LlmTestFixture fixture)
 
         var payload = await response.GetContentAsync<GovernanceEvaluateResponse>();
         Assert.True(payload.Allowed);
-        Assert.Equal("allow-read-only-inspection", payload.Matched_Rule);
+        Assert.Equal("allow-read-only-inspection", payload.MatchedRule);
     }
 
     [Fact(Skip = "Not implemented yet")]
@@ -104,7 +104,7 @@ public sealed class LlmTest(LlmTestFixture fixture)
         var payload = await response.GetContentAsync<GovernanceEvaluateResponse>();
         Assert.False(payload.Allowed);
         Assert.Equal("deny", payload.Action);
-        Assert.Equal("deny-excel-export", payload.Matched_Rule);
+        Assert.Equal("deny-excel-export", payload.MatchedRule);
     }
 
     private async Task LoginAsync()
@@ -135,7 +135,7 @@ public sealed class LlmTest(LlmTestFixture fixture)
 
         var payload = await response.GetContentAsync<ApiResponse<GovernanceSettingResponse>>();
         Assert.True(payload.Success);
-        Assert.Equal(enableBuiltinPromptInjection, payload.Data.Enable_Builtin_Prompt_Injection);
+        Assert.Equal(enableBuiltinPromptInjection, payload.Data.EnableBuiltinPromptInjection);
     }
 
     private async Task RemoveGlobalGovernanceSettingsAsync()
@@ -148,11 +148,11 @@ public sealed class LlmTest(LlmTestFixture fixture)
     }
 
     private sealed record GovernanceEvaluateResponse(
-        [property: JsonPropertyName("tool_name")] string Tool_Name,
-        [property: JsonPropertyName("input")] string? Input,
-        [property: JsonPropertyName("allowed")] bool Allowed,
-        [property: JsonPropertyName("reason")] string Reason,
-        [property: JsonPropertyName("action")] string? Action,
-        [property: JsonPropertyName("matched_rule")] string? Matched_Rule,
-        [property: JsonPropertyName("policy_path")] string Policy_Path);
+        string ToolName,
+        string? Input,
+        bool Allowed,
+        string Reason,
+        string? Action,
+        string? MatchedRule,
+        string PolicyPath);
 }

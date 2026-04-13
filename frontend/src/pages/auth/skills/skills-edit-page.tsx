@@ -67,7 +67,7 @@ export default function SkillsEditPage({ skillId }: SkillsEditPageProps) {
         ) : (
           <>
             {(() => {
-              const installState = parseSkillInstallState(skill.metadata_json)
+              const installState = parseSkillInstallState(skill.metadataJson)
               const canInstall =
                 installState?.status === "missing" ||
                 installState?.status === "failed"
@@ -120,10 +120,10 @@ export default function SkillsEditPage({ skillId }: SkillsEditPageProps) {
                 name: skill.name,
                 slug: skill.slug,
                 description: skill.description,
-                file_name: skill.file_name,
+                fileName: skill.fileName,
                 content: skill.content,
                 status: skill.status as UpdateSkillModel["status"],
-                metadata_json: skill.metadata_json ?? "",
+                metadataJson: skill.metadataJson ?? "",
               }}
               onSubmit={handleSubmit}
             />

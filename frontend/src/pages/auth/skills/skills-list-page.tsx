@@ -49,7 +49,7 @@ export default function SkillsListPage() {
     pageIndex: 0,
     pageSize: 50,
     searchText: query.trim() || undefined,
-    orderBy: "updated_at",
+    orderBy: "updatedAt",
     ascending: false,
   })
 
@@ -148,7 +148,7 @@ export default function SkillsListPage() {
             </TableHeader>
             <TableBody>
               {skills.map((skill) => {
-                const installState = parseSkillInstallState(skill.metadata_json)
+                const installState = parseSkillInstallState(skill.metadataJson)
                 const canInstall =
                   installState?.status === "missing" ||
                   installState?.status === "failed"
@@ -174,7 +174,7 @@ export default function SkillsListPage() {
                         {skill.slug}
                       </div>
                     </TableCell>
-                    <TableCell>{skill.file_name}</TableCell>
+                    <TableCell>{skill.fileName}</TableCell>
                     <TableCell>{skill.status}</TableCell>
                     <TableCell>
                       <div className="space-y-1">
@@ -207,7 +207,7 @@ export default function SkillsListPage() {
                         ) : null}
                       </div>
                     </TableCell>
-                    <TableCell>{skill.updated_at ?? skill.created_at}</TableCell>
+                    <TableCell>{skill.updatedAt ?? skill.createdAt}</TableCell>
                     <TableCell>
                       <Button asChild size="sm" variant="outline">
                         <Link

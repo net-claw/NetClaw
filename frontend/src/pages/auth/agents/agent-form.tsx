@@ -299,7 +299,7 @@ export function AgentForm({
                       <div>
                         <p className="font-medium">{skill.name}</p>
                         <p className="text-sm text-muted-foreground">
-                          {skill.file_name}
+                          {skill.fileName}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {skill.description}

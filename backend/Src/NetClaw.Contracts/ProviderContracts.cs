@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace NetClaw.Contracts;
 
 public record GetProvidersRequest(
@@ -11,20 +9,20 @@ public record GetProvidersRequest(
     bool? Active);
 
 public record CreateProviderRequest(
-    [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("provider")] string Provider,
-    [property: JsonPropertyName("model")] string Model,
-    [property: JsonPropertyName("apiKey")] string ApiKey,
-    [property: JsonPropertyName("baseUrl")] string? BaseUrl,
-    [property: JsonPropertyName("active")] bool Active);
+    string Name,
+    string Provider,
+    string Model,
+    string ApiKey,
+    string? BaseUrl,
+    bool Active);
 
 public record UpdateProviderRequest(
-    [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("provider")] string Provider,
-    [property: JsonPropertyName("model")] string Model,
-    [property: JsonPropertyName("apiKey")] string? ApiKey,
-    [property: JsonPropertyName("baseUrl")] string? BaseUrl,
-    [property: JsonPropertyName("active")] bool Active);
+    string Name,
+    string Provider,
+    string Model,
+    string? ApiKey,
+    string? BaseUrl,
+    bool Active);
 
 public record ProviderResponse(
     Guid Id,
