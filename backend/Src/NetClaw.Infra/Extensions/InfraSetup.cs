@@ -33,7 +33,7 @@ public static class InfraSetup
                     && (t.Namespace!.Contains(".Repos", StringComparison.Ordinal)
                         || t.Namespace!.Contains(".Services", StringComparison.Ordinal))),
                 false)
-            .AsImplementedInterfaces()
+            .AsMatchingInterface()
             .WithScopedLifetime());
 
         return services;

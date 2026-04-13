@@ -47,7 +47,7 @@ The project is similar in spirit to OpenClaw's structure: keep the root README f
 Copy the sample config:
 
 ```bash
-cp backend/Src/NetClaw.Api/appsettings.Sample.json backend/Src/NetClaw.Api/appsettings.Development.json
+cp backend/Src/NetClaw.Api/appsettings.Example.json backend/Src/NetClaw.Api/appsettings.Development.json
 ```
 
 Update the `ConnectionStrings.NetClawDb` value to point to your PostgreSQL instance.
