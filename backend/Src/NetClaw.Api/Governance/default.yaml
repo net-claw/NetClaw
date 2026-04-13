@@ -1,0 +1,24 @@
+api_version: "governance.toolkit/v1"
+version: "1.0"
+name: "netclaw-default"
+description: "Sample governance policy for NetClaw chat tool calls."
+scope: "global"
+default_action: "deny"
+rules:
+  - name: "allow-basic-time-and-math"
+    description: "Allow low-risk informational helpers."
+    condition: "tool_name == 'get_server_time' or tool_name == 'add_numbers'"
+    action: "allow"
+    priority: 100
+
+  - name: "allow-read-only-inspection"
+    description: "Allow non-mutating discovery helpers."
+    condition: "tool_name == 'get_project_snapshot' or tool_name == 'get_available_runtime_skills' or tool_name == 'get_available_agent_skills' or tool_name == 'echo_text'"
+    action: "allow"
+    priority: 90
+
+  - name: "deny-excel-export"
+    description: "Keep file-producing tools blocked in the initial sample."
+    condition: "tool_name == 'create_excel_file'"
+    action: "deny"
+    priority: 200

@@ -1,0 +1,9 @@
+{
+  "id": "telegram.plugin",
+  "version": "1.0.0",
+  "entryAssembly": "NetClaw.Plugin.Telegram.dll",
+  "entryType": "NetClaw.Plugin.Telegram.TelegramPlugin",
+  "hostVersion": ">=1.0.0",
+  "enabled": true,
+  "capabilities": ["endpoint"]
+}

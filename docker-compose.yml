@@ -1,0 +1,37 @@
+services:
+  sandbox:
+    build:
+      context: ./sandbox
+    image: netclaw-sandbox:latest
+    container_name: netclaw-sandbox
+    command: ["sleep", "infinity"]
+    restart: unless-stopped
+    working_dir: /workspace
+    volumes:
+      - ./skills:/skills:ro
+      - ./sandbox-data:/workspace
+    mem_limit: 512m
+    cpus: 1.0
+    shm_size: 256m
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: netclaw:latest
+    depends_on:
+      - sandbox
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      SKILLS_DIR: /app/skills
+      SANDBOX_IMAGE: netclaw-sandbox:latest
+      SANDBOX_NAME: netclaw-sandbox
+      SANDBOX_ENSURE_ON_STARTUP: "false"
+      SANDBOX_SHARED_DIR: /app/sandbox-data
+      DOCKER_HOST: unix:///var/run/docker.sock
+    ports:
+      - "5000:8080"
+    volumes:
+      - ./skills:/app/skills
+      - ./sandbox-data:/app/sandbox-data
+      - /var/run/docker.sock:/var/run/docker.sock

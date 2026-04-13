@@ -1,0 +1,9 @@
+{
+  "id": "slack.plugin",
+  "version": "1.0.0",
+  "entryAssembly": "NetClaw.Plugin.Slack.dll",
+  "entryType": "NetClaw.Plugin.Slack.SlackPlugin",
+  "hostVersion": ">=1.0.0",
+  "enabled": true,
+  "capabilities": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "discord.plugin",
+  "version": "1.0.0",
+  "entryAssembly": "NetClaw.Plugin.Discord.dll",
+  "entryType": "NetClaw.Plugin.Discord.DiscordPlugin",
+  "hostVersion": ">=1.0.0",
+  "enabled": true,
+  "capabilities": []
+}

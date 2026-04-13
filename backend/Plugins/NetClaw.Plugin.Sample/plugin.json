@@ -1,0 +1,9 @@
+{
+  "id": "sample.plugin",
+  "version": "1.0.0",
+  "entryAssembly": "NetClaw.Plugin.Sample.dll",
+  "entryType": "NetClaw.Plugin.Sample.SamplePlugin",
+  "hostVersion": ">=1.0.0",
+  "enabled": true,
+  "capabilities": ["endpoint", "services"]
+}
