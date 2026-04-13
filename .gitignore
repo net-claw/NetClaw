@@ -20,6 +20,7 @@ backend/**/obj\\*/
 backend/**/appsettings.json
 backend/**/appsettings.Development.json
 backend/**/appsettings.Sample.json
+backend/**/appsettings.test.json
 
 # ── Dependencies ─────────────────────────────────────────────────────────────
 frontend/node_modules/
