@@ -8,6 +8,7 @@ using Microsoft.Extensions.AI;
 using NetClaw.Application.Models.Llm;
 using NetClaw.Application.Services;
 using NetClaw.Domains.Entities;
+using NetClaw.Domains.Repos;
 using NetClaw.Infra.Contexts;
 using NetClaw.Infra.Extensions;
 using Npgsql;
@@ -26,6 +27,8 @@ public sealed class ProviderRoutingChatClient(
     IMemoryProvider memoryProvider,
     IAgentToolService toolService,
     ILoggerFactory loggerFactory,
+    IAgentRepo agentRepo,
+    IProviderRepo providerRepo,
     ILogger<ProviderRoutingChatClient> logger)
     : IChatClient
 {
@@ -646,19 +649,13 @@ public sealed class ProviderRoutingChatClient(
 
     private ProviderSelection ResolveSelectionFromDb(string? requestedModel)
     {
-        using var scope = scopeFactory.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        var providers = db.Providers
-            .AsNoTracking()
+        var providers = providerRepo.QueryNoTracking()
             .Where(p => p.IsActive)
             .OrderBy(p => p.Name)
             .ToList();
 
         if (providers.Count == 0)
-        {
             throw new InvalidOperationException("No AI provider configured.");
-        }
 
         if (string.IsNullOrWhiteSpace(requestedModel))
         {
@@ -687,14 +684,9 @@ public sealed class ProviderRoutingChatClient(
     private AgentRuntimeContext? LoadAgentContext(string? selectedAgentId)
     {
         if (!Guid.TryParse(selectedAgentId, out var agentId))
-        {
             return null;
-        }
 
-        using var scope = scopeFactory.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        var agent = db.Agents
-            .AsNoTracking()
+        var agent = agentRepo.QueryNoTracking()
             .Include(a => a.AgentProviders)
             .ThenInclude(ap => ap.Provider)
             .Include(a => a.AgentSkills)
