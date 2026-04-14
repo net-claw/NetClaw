@@ -86,14 +86,14 @@ export default function RolesPage() {
   const sortSummary = useMemo(() => {
     const currentSort = sorting[0]
 
-    return t("identity.sort.current", {
+    return t("common.sort.current", {
       field:
         currentSort?.id === "updated_at"
           ? t("identity.roles.table.updatedAt")
           : t("identity.roles.table.name"),
       direction: currentSort?.desc
-        ? t("identity.sort.descending")
-        : t("identity.sort.ascending"),
+        ? t("common.sort.descending")
+        : t("common.sort.ascending"),
     })
   }, [sorting, t])
 
@@ -194,14 +194,14 @@ export default function RolesPage() {
                 }}
               >
                 <RefreshIcon data-icon="inline-start" />
-                {t("identity.toolbar.refresh")}
+                {t("common.toolbar.refresh")}
               </Button>
 
               <Collapsible open={showFilters} onOpenChange={setShowFilters}>
                 <CollapsibleTrigger asChild>
                   <Button type="button" variant="outline" size="sm">
                     <FilterIcon data-icon="inline-start" />
-                    {t("identity.toolbar.filters")}
+                    {t("common.toolbar.filters")}
                   </Button>
                 </CollapsibleTrigger>
               </Collapsible>
@@ -210,12 +210,12 @@ export default function RolesPage() {
                 <DropdownMenuTrigger asChild>
                   <Button type="button" variant="outline" size="sm">
                     <SettingsIcon data-icon="inline-start" />
-                    {t("identity.toolbar.columns")}
+                    {t("common.toolbar.columns")}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-44">
                   <DropdownMenuLabel>
-                    {t("identity.toolbar.toggleColumns")}
+                    {t("common.toolbar.toggleColumns")}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   {table
@@ -291,7 +291,7 @@ export default function RolesPage() {
                         ])
                       }
                     >
-                      {t("identity.sort.ascending")}
+                      {t("common.sort.ascending")}
                     </Button>
                     <Button
                       type="button"
@@ -303,7 +303,7 @@ export default function RolesPage() {
                         ])
                       }
                     >
-                      {t("identity.sort.descending")}
+                      {t("common.sort.descending")}
                     </Button>
                   </div>
                 </div>

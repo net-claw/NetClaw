@@ -1,65 +1,44 @@
 import { Link } from "@tanstack/react-router"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
+import { DataTable } from "@/components/data-table/data-table"
+import { DataTablePagination } from "@/components/data-table/data-table-pagination"
 import { DeleteConfirmDialog } from "@/components/delete-confirm-dialog"
 import { PageHeaderCard } from "@/components/share/cards/page-header-card"
 import { SectionCard } from "@/components/share/cards/section-card"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
   InputGroupText,
 } from "@/components/ui/input-group"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
-  useDeleteChannels,
-  useGetChannelList,
-  useRestartChannel,
-  useStartChannel,
-  useStopChannel,
-} from "@/hooks/api/use-channel"
 import { actionIcons, appIcons } from "@/lib/icons"
-import { channelData } from "@/constants/data"
+import { useChannelsTable } from "@/routes/_auth/channels/-use-channels-table"
 
 export default function ChannelsListPage() {
   const { t } = useTranslation()
   const [query, setQuery] = useState("")
-  const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const ChannelsIcon = appIcons.channels
   const CreateIcon = actionIcons.create
   const DeleteIcon = actionIcons.delete
   const SearchIcon = actionIcons.search
   const RefreshIcon = actionIcons.refresh
-  const StartIcon = actionIcons.start
-  const StopIcon = actionIcons.stop
-  const RestartIcon = actionIcons.restart
-  const deleteChannelsMutation = useDeleteChannels()
-  const startChannelMutation = useStartChannel()
-  const stopChannelMutation = useStopChannel()
-  const restartChannelMutation = useRestartChannel()
-
-  const { data, isLoading, isFetching, refetch } = useGetChannelList({
-    pageIndex: 0,
-    pageSize: 50,
-    searchText: query.trim() || undefined,
-    orderBy: "updatedAt",
-    ascending: false,
-  })
-
-  const channels = data?.items ?? []
-  const totalItems = data?.totalItems ?? 0
-  const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds])
+  const {
+    table,
+    totalItems,
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+    selectedChannelIds,
+    handleDeleteSelected,
+    deleteChannelsMutation,
+    pageSizeOptions,
+    setPagination,
+  } = useChannelsTable(query)
 
   return (
     <>
@@ -80,26 +59,30 @@ export default function ChannelsListPage() {
 
       <SectionCard
         headerRight={
-          selectedIds.length > 0 ? (
+          selectedChannelIds.length > 0 ? (
             <DeleteConfirmDialog
               open={isDeleteDialogOpen}
               onOpenChange={setIsDeleteDialogOpen}
               title={t("channels.deleteDialog.title")}
               description={t("channels.deleteDialog.description_other", {
-                count: selectedIds.length,
+                count: selectedChannelIds.length,
               })}
               confirmLabel={t("channels.deleteDialog.confirm")}
               cancelLabel={t("channels.deleteDialog.cancel")}
               onConfirm={async () => {
-                await deleteChannelsMutation.mutateAsync(selectedIds)
-                setSelectedIds([])
+                await handleDeleteSelected()
                 setIsDeleteDialogOpen(false)
               }}
               trigger={
-                <Button type="button" size="sm" variant="destructive">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="destructive"
+                  disabled={deleteChannelsMutation.isPending}
+                >
                   <DeleteIcon data-icon="inline-start" />
                   {t("channels.actions.deleteSelected_other", {
-                    count: selectedIds.length,
+                    count: selectedChannelIds.length,
                   })}
                 </Button>
               }
@@ -119,7 +102,10 @@ export default function ChannelsListPage() {
                 <InputGroupInput
                   value={query}
                   placeholder={t("channels.searchPlaceholder")}
-                  onChange={(event) => setQuery(event.target.value)}
+                  onChange={(event) => {
+                    setQuery(event.target.value)
+                    setPagination((current) => ({ ...current, pageIndex: 0 }))
+                  }}
                 />
               </InputGroup>
             </div>
@@ -134,114 +120,30 @@ export default function ChannelsListPage() {
               }}
             >
               <RefreshIcon data-icon="inline-start" />
-              {t("identity.toolbar.refresh")}
+              {t("common.toolbar.refresh")}
             </Button>
           </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead />
-                <TableHead>{t("channels.table.name")}</TableHead>
-                <TableHead>{t("channels.table.kind")}</TableHead>
-                <TableHead>{t("channels.table.status")}</TableHead>
-                <TableHead>{t("channels.table.updatedAt")}</TableHead>
-                <TableHead>{t("channels.table.actions")}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {channels.map((channel) => (
-                <TableRow key={channel.id}>
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedIdSet.has(channel.id)}
-                      onCheckedChange={(checked) => {
-                        setSelectedIds((current) =>
-                          checked
-                            ? [...current, channel.id]
-                            : current.filter((id) => id !== channel.id)
-                        )
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell className="font-medium">{channel.name}</TableCell>
-                  <TableCell className="flex items-center gap-x-2">
-                    <img
-                      src={
-                        channelData.find((c) => c.value === channel.kind)?.image
-                      }
-                      alt={channel.kind}
-                      className="h-8 w-8 rounded-lg"
-                    />
-                    {channel.kind}
-                  </TableCell>
-                  <TableCell>{channel.status}</TableCell>
-                  <TableCell>
-                    {channel.updatedOn ?? channel.createdOn}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-2">
-                      <Button asChild size="sm" variant="outline">
-                        <Link
-                          to="/channels/$channelId/edit"
-                          params={{ channelId: channel.id }}
-                        >
-                          {t("identity.actions.edit")}
-                        </Link>
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        disabled={startChannelMutation.isPending}
-                        onClick={() => {
-                          void startChannelMutation.mutateAsync(channel.id)
-                        }}
-                      >
-                        <StartIcon data-icon="inline-start" />
-                        {t("channels.actions.start")}
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        disabled={stopChannelMutation.isPending}
-                        onClick={() => {
-                          void stopChannelMutation.mutateAsync(channel.id)
-                        }}
-                      >
-                        <StopIcon data-icon="inline-start" />
-                        {t("channels.actions.stop")}
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        disabled={restartChannelMutation.isPending}
-                        onClick={() => {
-                          void restartChannelMutation.mutateAsync(channel.id)
-                        }}
-                      >
-                        <RestartIcon data-icon="inline-start" />
-                        {t("channels.actions.restart")}
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-
-              {!isLoading && channels.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={6}
-                    className="text-center text-sm text-muted-foreground"
-                  >
-                    {t("channels.emptyChannels")}
-                  </TableCell>
-                </TableRow>
-              ) : null}
-            </TableBody>
-          </Table>
+          {isError ? (
+            <div className="rounded-xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+              {t("channels.errors.loadChannels")}
+            </div>
+          ) : (
+            <>
+              <DataTable
+                table={table}
+                loading={isLoading}
+                emptyMessage={t("channels.emptyChannels")}
+              />
+              <DataTablePagination
+                table={table}
+                rowCount={totalItems}
+                isFetching={isFetching && !isLoading}
+                pageSizeOptions={pageSizeOptions}
+                selectedCount={selectedChannelIds.length}
+              />
+            </>
+          )}
         </div>
       </SectionCard>
     </>

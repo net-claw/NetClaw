@@ -11,7 +11,27 @@
     "syncRuntime": "Sync Runtime",
     "syncing": "Syncing...",
     "runtimeSyncCompleted": "Runtime sync completed: {{checked}} checked, {{updated}} updated.",
-    "runtimeSyncFailed": "Could not sync runtime state."
+    "runtimeSyncFailed": "Could not sync runtime state.",
+    "toolbar": {
+      "refresh": "Refresh",
+      "filters": "Filters",
+      "columns": "Columns",
+      "toggleColumns": "Toggle columns"
+    },
+    "sort": {
+      "ascending": "Ascending",
+      "descending": "Descending",
+      "current": "Sorted by {{field}} • {{direction}}"
+    },
+    "pagination": {
+      "summary": "Page {{currentPage}} / {{totalPage}} • {{totalItems}} items",
+      "selected": "{{count}} selected",
+      "rangeSummary": "{{from}}-{{to}} of {{totalItems}}",
+      "refreshing": "Refreshing",
+      "perPage": "{{count}} / page",
+      "page": "Page",
+      "of": "of {{totalPage}}"
+    }
   },
   "auth": {
     "login": "Sign in",
@@ -440,10 +460,12 @@
       "deleteSelected_other": "Delete {{count}} agent teams"
     },
     "table": {
+      "selectAll": "Select all agent teams on this page",
+      "selectRow": "Select {{name}}",
       "name": "Name",
       "status": "Status",
       "members": "Members",
-      "orchestration": "Orchestration",
+      "rootMember": "Root member",
       "actions": "Actions"
     },
     "form": {
@@ -481,7 +503,8 @@
       "metadataJsonPlaceholder": "{\"lane\":\"primary\"}"
     },
     "errors": {
-      "loadAgentTeam": "Could not load this agent team."
+      "loadAgentTeam": "Could not load this agent team.",
+      "loadAgentTeams": "Could not load the agent team list."
     },
     "sheet": {
       "createTitle": "Create agent team",
@@ -514,6 +537,7 @@
     "emptySkills": "No skills match the current search.",
     "actions": {
       "newSkill": "New skill",
+      "install": "Install",
       "uploadArchive": "Upload archive",
       "backToSkills": "Back to skills",
       "deleteSelected_one": "Delete 1 skill",
@@ -525,6 +549,8 @@
       "name": "Name",
       "fileName": "File name",
       "status": "Status",
+      "install": "Install",
+      "missingCommands": "Missing: {{commands}}",
       "updatedAt": "Updated",
       "actions": "Actions"
     },

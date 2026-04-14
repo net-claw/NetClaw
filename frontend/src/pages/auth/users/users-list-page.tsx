@@ -61,14 +61,14 @@ export default function UsersListPage() {
   const sortSummary = useMemo(() => {
     const currentSort = sorting[0]
 
-    return t("identity.sort.current", {
+    return t("common.sort.current", {
       field:
         currentSort?.id === "firstName"
           ? t("identity.table.name")
           : t("identity.table.email"),
       direction: currentSort?.desc
-        ? t("identity.sort.descending")
-        : t("identity.sort.ascending"),
+        ? t("common.sort.descending")
+        : t("common.sort.ascending"),
     })
   }, [sorting, t])
 
@@ -153,14 +153,14 @@ export default function UsersListPage() {
                 }}
               >
                 <RefreshIcon data-icon="inline-start" />
-                {t("identity.toolbar.refresh")}
+                {t("common.toolbar.refresh")}
               </Button>
 
               <Collapsible open={showFilters} onOpenChange={setShowFilters}>
                 <CollapsibleTrigger asChild>
                   <Button type="button" variant="outline" size="sm">
                     <FilterIcon data-icon="inline-start" />
-                    {t("identity.toolbar.filters")}
+                    {t("common.toolbar.filters")}
                   </Button>
                 </CollapsibleTrigger>
               </Collapsible>
@@ -169,12 +169,12 @@ export default function UsersListPage() {
                 <DropdownMenuTrigger asChild>
                   <Button type="button" variant="outline" size="sm">
                     <SettingsIcon data-icon="inline-start" />
-                    {t("identity.toolbar.columns")}
+                    {t("common.toolbar.columns")}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-44">
                   <DropdownMenuLabel>
-                    {t("identity.toolbar.toggleColumns")}
+                    {t("common.toolbar.toggleColumns")}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   {table
@@ -252,7 +252,7 @@ export default function UsersListPage() {
                         ])
                       }
                     >
-                      {t("identity.sort.ascending")}
+                      {t("common.sort.ascending")}
                     </Button>
                     <Button
                       type="button"
@@ -264,7 +264,7 @@ export default function UsersListPage() {
                         ])
                       }
                     >
-                      {t("identity.sort.descending")}
+                      {t("common.sort.descending")}
                     </Button>
                   </div>
                 </div>
@@ -275,7 +275,7 @@ export default function UsersListPage() {
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">{sortSummary}</p>
             <span className="text-sm text-muted-foreground">
-              {t("identity.pagination.summary", {
+              {t("common.pagination.summary", {
                 currentPage: table.getState().pagination.pageIndex + 1,
                 totalPage: Math.max(table.getPageCount(), 1),
                 totalItems,

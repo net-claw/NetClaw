@@ -56,20 +56,20 @@ export function DataTablePagination<TData extends RowData>({
     <div className="mt-4 flex flex-col gap-3 border-t pt-4 md:flex-row md:items-center md:justify-end">
       <p className="text-sm text-muted-foreground">
         {selectedCount > 0
-          ? t("identity.pagination.selected", { count: selectedCount })
-          : t("identity.pagination.rangeSummary", {
+          ? t("common.pagination.selected", { count: selectedCount })
+          : t("common.pagination.rangeSummary", {
               from: rangeStart,
               to: rangeEnd,
               totalItems: rowCount,
             })}
-        {isFetching ? ` • ${t("identity.pagination.refreshing")}` : ""}
+        {isFetching ? ` • ${t("common.pagination.refreshing")}` : ""}
       </p>
 
       <div className="flex items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button type="button" variant="outline" size="sm">
-              {t("identity.pagination.perPage", { count: pageSize })}
+              {t("common.pagination.perPage", { count: pageSize })}
               <ChevronsUpDownIcon data-icon="inline-end" />
             </Button>
           </DropdownMenuTrigger>
@@ -83,14 +83,14 @@ export function DataTablePagination<TData extends RowData>({
                   table.setPageIndex(0)
                 }}
               >
-                {t("identity.pagination.perPage", { count: option })}
+                {t("common.pagination.perPage", { count: option })}
               </DropdownMenuCheckboxItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
 
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span>{t("identity.pagination.page")}</span>
+          <span>{t("common.pagination.page")}</span>
           <Input
             value={pageInput}
             inputMode="numeric"
@@ -104,7 +104,7 @@ export function DataTablePagination<TData extends RowData>({
             }}
             onBlur={jumpToPage}
           />
-          <span>{t("identity.pagination.of", { totalPage: Math.max(pageCount, 1) })}</span>
+          <span>{t("common.pagination.of", { totalPage: Math.max(pageCount, 1) })}</span>
         </div>
 
         <Button

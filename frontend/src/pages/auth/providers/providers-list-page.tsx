@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 
+import { DataTable } from "@/components/data-table/data-table"
+import { DataTablePagination } from "@/components/data-table/data-table-pagination"
 import { DeleteConfirmDialog } from "@/components/delete-confirm-dialog"
 import { PageHeaderCard } from "@/components/share/cards/page-header-card"
 import { SectionCard } from "@/components/share/cards/section-card"
@@ -11,41 +13,32 @@ import {
   InputGroupInput,
   InputGroupText,
 } from "@/components/ui/input-group"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { useDeleteProviders, useGetProviderList } from "@/hooks/api/use-provider"
 import { actionIcons, appIcons } from "@/lib/icons"
+import { useProvidersTable } from "@/routes/_auth/providers/-use-providers-table"
 import { useTranslation } from "react-i18next"
 
 export default function ProvidersListPage() {
   const { t } = useTranslation()
   const [query, setQuery] = useState("")
-  const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const ProvidersIcon = appIcons.providers
   const CreateIcon = actionIcons.create
   const DeleteIcon = actionIcons.delete
   const SearchIcon = actionIcons.search
   const RefreshIcon = actionIcons.refresh
-  const deleteProvidersMutation = useDeleteProviders()
-
-  const { data, isLoading, isFetching, refetch } = useGetProviderList({
-    pageIndex: 0,
-    pageSize: 50,
-    searchText: query.trim() || undefined,
-    orderBy: "updatedAt",
-    ascending: false,
-  })
-
-  const providers = data?.items ?? []
-  const totalItems = data?.totalItems ?? 0
-  const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds])
+  const {
+    table,
+    totalItems,
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+    selectedProviderIds,
+    handleDeleteSelected,
+    deleteProvidersMutation,
+    pageSizeOptions,
+    setPagination,
+  } = useProvidersTable(query)
 
   return (
     <>
@@ -66,26 +59,30 @@ export default function ProvidersListPage() {
 
       <SectionCard
         headerRight={
-          selectedIds.length > 0 ? (
+          selectedProviderIds.length > 0 ? (
             <DeleteConfirmDialog
               open={isDeleteDialogOpen}
               onOpenChange={setIsDeleteDialogOpen}
               title={t("providers.deleteDialog.title")}
               description={t("providers.deleteDialog.description_other", {
-                count: selectedIds.length,
+                count: selectedProviderIds.length,
               })}
               confirmLabel={t("providers.deleteDialog.confirm")}
               cancelLabel={t("providers.deleteDialog.cancel")}
               onConfirm={async () => {
-                await deleteProvidersMutation.mutateAsync(selectedIds)
-                setSelectedIds([])
+                await handleDeleteSelected()
                 setIsDeleteDialogOpen(false)
               }}
               trigger={
-                <Button type="button" size="sm" variant="destructive">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="destructive"
+                  disabled={deleteProvidersMutation.isPending}
+                >
                   <DeleteIcon data-icon="inline-start" />
                   {t("providers.actions.deleteSelected_other", {
-                    count: selectedIds.length,
+                    count: selectedProviderIds.length,
                   })}
                 </Button>
               }
@@ -105,7 +102,10 @@ export default function ProvidersListPage() {
                 <InputGroupInput
                   value={query}
                   placeholder={t("providers.searchPlaceholder")}
-                  onChange={(event) => setQuery(event.target.value)}
+                  onChange={(event) => {
+                    setQuery(event.target.value)
+                    setPagination((current) => ({ ...current, pageIndex: 0 }))
+                  }}
                 />
               </InputGroup>
             </div>
@@ -120,72 +120,30 @@ export default function ProvidersListPage() {
               }}
             >
               <RefreshIcon data-icon="inline-start" />
-              {t("identity.toolbar.refresh")}
+              {t("common.toolbar.refresh")}
             </Button>
           </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead />
-                <TableHead>{t("providers.table.name")}</TableHead>
-                <TableHead>{t("providers.table.provider")}</TableHead>
-                <TableHead>{t("providers.table.model")}</TableHead>
-                <TableHead>{t("providers.table.status")}</TableHead>
-                <TableHead>{t("providers.table.updatedAt")}</TableHead>
-                <TableHead>{t("providers.table.actions")}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {providers.map((provider) => (
-                <TableRow key={provider.id}>
-                  <TableCell>
-                    <input
-                      type="checkbox"
-                      checked={selectedIdSet.has(provider.id)}
-                      onChange={(event) => {
-                        setSelectedIds((current) =>
-                          event.target.checked
-                            ? [...current, provider.id]
-                            : current.filter((id) => id !== provider.id)
-                        )
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell className="font-medium">{provider.name}</TableCell>
-                  <TableCell>{provider.providerType}</TableCell>
-                  <TableCell>{provider.defaultModel}</TableCell>
-                  <TableCell>
-                    {provider.isActive ? "active" : "inactive"}
-                  </TableCell>
-                  <TableCell>
-                    {provider.updatedOn ?? provider.createdOn}
-                  </TableCell>
-                  <TableCell>
-                    <Button asChild size="sm" variant="outline">
-                      <Link
-                        to="/providers/$providerId/edit"
-                        params={{ providerId: provider.id }}
-                      >
-                        {t("identity.actions.edit")}
-                      </Link>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-
-              {!isLoading && providers.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={7}
-                    className="text-center text-sm text-muted-foreground"
-                  >
-                    {t("providers.emptyProviders")}
-                  </TableCell>
-                </TableRow>
-              ) : null}
-            </TableBody>
-          </Table>
+          {isError ? (
+            <div className="rounded-xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+              {t("providers.errors.loadProviders")}
+            </div>
+          ) : (
+            <>
+              <DataTable
+                table={table}
+                loading={isLoading}
+                emptyMessage={t("providers.emptyProviders")}
+              />
+              <DataTablePagination
+                table={table}
+                rowCount={totalItems}
+                isFetching={isFetching && !isLoading}
+                pageSizeOptions={pageSizeOptions}
+                selectedCount={selectedProviderIds.length}
+              />
+            </>
+          )}
         </div>
       </SectionCard>
     </>

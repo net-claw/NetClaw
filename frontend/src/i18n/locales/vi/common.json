@@ -11,7 +11,27 @@
     "syncRuntime": "Sync Runtime",
     "syncing": "Đang đồng bộ...",
     "runtimeSyncCompleted": "Đồng bộ runtime xong: {{checked}} đã kiểm tra, {{updated}} đã cập nhật.",
-    "runtimeSyncFailed": "Không thể đồng bộ runtime state."
+    "runtimeSyncFailed": "Không thể đồng bộ runtime state.",
+    "toolbar": {
+      "refresh": "Tải lại",
+      "filters": "Bộ lọc",
+      "columns": "Cột",
+      "toggleColumns": "Hiện/ẩn cột"
+    },
+    "sort": {
+      "ascending": "Tăng dần",
+      "descending": "Giảm dần",
+      "current": "Đang sắp xếp theo {{field}} • {{direction}}"
+    },
+    "pagination": {
+      "summary": "Trang {{currentPage}} / {{totalPage}} • {{totalItems}} mục",
+      "selected": "Đã chọn {{count}}",
+      "rangeSummary": "{{from}}-{{to}} / {{totalItems}}",
+      "refreshing": "Đang tải lại",
+      "perPage": "{{count}} / trang",
+      "page": "Trang",
+      "of": "/ {{totalPage}}"
+    }
   },
   "auth": {
     "login": "Đăng nhập",
@@ -440,10 +460,12 @@
       "deleteSelected_other": "Xóa {{count}} agent teams"
     },
     "table": {
+      "selectAll": "Chọn tất cả agent team trong trang này",
+      "selectRow": "Chọn {{name}}",
       "name": "Tên",
       "status": "Trạng thái",
-      "members": "Members",
-      "orchestration": "Orchestration",
+      "members": "Thành viên",
+      "rootMember": "Member gốc",
       "actions": "Thao tác"
     },
     "form": {
@@ -481,7 +503,8 @@
       "metadataJsonPlaceholder": "{\"lane\":\"primary\"}"
     },
     "errors": {
-      "loadAgentTeam": "Không tải được agent team này."
+      "loadAgentTeam": "Không tải được agent team này.",
+      "loadAgentTeams": "Không tải được danh sách agent team."
     },
     "sheet": {
       "createTitle": "Tạo agent team",
@@ -514,6 +537,7 @@
     "emptySkills": "Không có skill nào khớp điều kiện tìm kiếm.",
     "actions": {
       "newSkill": "Skill mới",
+      "install": "Cài đặt",
       "uploadArchive": "Tải archive",
       "backToSkills": "Quay lại danh sách skills",
       "deleteSelected_one": "Xóa 1 skill",
@@ -525,6 +549,8 @@
       "name": "Tên",
       "fileName": "File name",
       "status": "Trạng thái",
+      "install": "Cài đặt",
+      "missingCommands": "Thiếu: {{commands}}",
       "updatedAt": "Cập nhật",
       "actions": "Thao tác"
     },
