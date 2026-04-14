@@ -26,5 +26,9 @@
       <ProjectReference Include="..\..\Plugins\NetClaw.Plugin.Abstractions\NetClaw.Plugin.Abstractions.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="skills\uploaded\excel-xlsx-upload-skill\excel-xlsx-upload-skill-1.0.0\_meta.json" />
+    </ItemGroup>
+
 
 </Project>
