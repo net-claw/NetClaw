@@ -153,12 +153,12 @@ export function ProviderForm({
                   <SelectContent>
                     {providerData.map((p) => (
                       <SelectItem key={p.value} value={p.value}>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-x-2">
                           {p.image && (
                             <img
                               src={p.image}
                               alt={p.label}
-                              className="h-8 w-8 object-contain"
+                              className="h-6 w-6 rounded-md"
                             />
                           )}
                           {p.label}

@@ -43,7 +43,7 @@ export const providerData = [
   },
 
   {
-    image: "/images/providers/anthropic.jpg",
+    image: "/images/providers/anthropic.png",
     value: "anthropic",
     label: "Anthropic",
     models: ["claude-sonnet-4-6"],
