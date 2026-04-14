@@ -69,6 +69,8 @@ export default function ChannelsEditPage({
               kind: channel.kind,
               token: "",
               settingsJson: channel.settingsJson ?? "",
+              agentId: channel.agentId ?? "",
+              agentTeamId: channel.agentTeamId ?? "",
               startNow: false,
             }}
             onSubmit={handleSubmit}

@@ -5,4 +5,6 @@ public record CreateChannel(
     string Kind,
     string Token,
     string? SettingsJson,
+    Guid? AgentId,
+    Guid? AgentTeamId,
     bool StartNow);

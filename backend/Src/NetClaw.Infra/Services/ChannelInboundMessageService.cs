@@ -1,3 +1,4 @@
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using NetClaw.Application.Services;
 using NetClaw.Domains.Repos;
@@ -6,6 +7,7 @@ namespace NetClaw.Infra.Services;
 
 internal sealed class ChannelInboundMessageService(
     IChannelRepo repo,
+    IChatClient chatClient,
     ILogger<ChannelInboundMessageService> logger) : IChannelInboundMessageService
 {
     public async Task<string> HandleInboundMessageAsync(
@@ -44,6 +46,34 @@ internal sealed class ChannelInboundMessageService(
             username,
             text);
 
-        return "Kenh nay chua duoc lien ket voi agent. Vui long cau hinh agent cho channel nay.";
+        if (channel.AgentId is null && channel.AgentTeamId is null)
+        {
+            return "Kenh nay chua duoc lien ket voi agent hoac agent team. Vui long cau hinh target cho channel nay.";
+        }
+
+        var options = new ChatOptions
+        {
+            ConversationId = $"channel:{channelId:N}:chat:{chatId.Trim()}",
+            AdditionalProperties = new AdditionalPropertiesDictionary
+            {
+                ["selected_channel_id"] = channel.Id.ToString(),
+            },
+        };
+
+        if (channel.AgentTeamId.HasValue)
+        {
+            options.AdditionalProperties["selected_team_id"] = channel.AgentTeamId.Value.ToString();
+        }
+        else if (channel.AgentId.HasValue)
+        {
+            options.AdditionalProperties["selected_agent_id"] = channel.AgentId.Value.ToString();
+        }
+
+        var response = await chatClient.GetResponseAsync(
+            [new ChatMessage(ChatRole.User, text)],
+            options,
+            cancellationToken);
+
+        return response.Text ?? string.Empty;
     }
 }

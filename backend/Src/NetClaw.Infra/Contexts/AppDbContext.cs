@@ -72,6 +72,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             entity.Property(channel => channel.Status).HasColumnName("status").HasMaxLength(50);
             entity.Property(channel => channel.EncryptedCredentials).HasColumnName("encrypted_credentials").HasMaxLength(8000);
             entity.Property(channel => channel.SettingsJson).HasColumnName("settings_json").HasColumnType("jsonb");
+            entity.Property(channel => channel.AgentId).HasColumnName("agent_id");
+            entity.Property(channel => channel.AgentTeamId).HasColumnName("agent_team_id");
             entity.Property(channel => channel.CreatedBy).HasColumnName("created_by");
             entity.Property(channel => channel.CreatedOn).HasColumnName("created_at");
             entity.Property(channel => channel.UpdatedBy).HasColumnName("updated_by");
@@ -79,6 +81,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             entity.Property(channel => channel.DeletedAt).HasColumnName("deleted_at");
             entity.HasIndex(channel => channel.Name).IsUnique();
             entity.HasIndex(channel => new { channel.Kind, channel.Status });
+            entity.HasIndex(channel => channel.AgentId);
+            entity.HasIndex(channel => channel.AgentTeamId);
         });
 
         modelBuilder.Entity<Agent>(entity =>

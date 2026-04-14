@@ -68,6 +68,8 @@ public sealed class ChannelEndpoints : IEndpoint
                     request.Kind,
                     request.Token,
                     request.SettingsJson,
+                    request.AgentId,
+                    request.AgentTeamId,
                     request.StartNow),
                 ct);
 
@@ -87,7 +89,9 @@ public sealed class ChannelEndpoints : IEndpoint
                     request.Name,
                     request.Kind,
                     request.Token,
-                    request.SettingsJson),
+                    request.SettingsJson,
+                    request.AgentId,
+                    request.AgentTeamId),
                 ct);
 
             return ChannelEndpointMappings.ToApiResult(result, context);

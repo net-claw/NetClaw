@@ -12,6 +12,8 @@ public class Channel : AggregateRoot
         string status,
         string encryptedCredentials,
         string? settingsJson = null,
+        Guid? agentId = null,
+        Guid? agentTeamId = null,
         string? createdBy = null)
         : base(createdBy)
     {
@@ -20,6 +22,8 @@ public class Channel : AggregateRoot
         Status = status.Trim().ToLowerInvariant();
         EncryptedCredentials = encryptedCredentials.Trim();
         SettingsJson = string.IsNullOrWhiteSpace(settingsJson) ? null : settingsJson.Trim();
+        AgentId = agentId;
+        AgentTeamId = agentTeamId;
     }
 
     private Channel()
@@ -36,6 +40,10 @@ public class Channel : AggregateRoot
 
     public string? SettingsJson { get; private set; }
 
+    public Guid? AgentId { get; private set; }
+
+    public Guid? AgentTeamId { get; private set; }
+
     public DateTimeOffset? DeletedAt { get; private set; }
 
     public bool IsDeleted => DeletedAt.HasValue;
@@ -46,6 +54,8 @@ public class Channel : AggregateRoot
         string status,
         string encryptedCredentials,
         string? settingsJson,
+        Guid? agentId,
+        Guid? agentTeamId,
         string? updatedBy = null)
     {
         Name = name.Trim();
@@ -53,6 +63,8 @@ public class Channel : AggregateRoot
         Status = status.Trim().ToLowerInvariant();
         EncryptedCredentials = encryptedCredentials.Trim();
         SettingsJson = string.IsNullOrWhiteSpace(settingsJson) ? null : settingsJson.Trim();
+        AgentId = agentId;
+        AgentTeamId = agentTeamId;
         SetUpdatedBy(updatedBy ?? "System");
     }
 

@@ -5,4 +5,6 @@ public record UpdateChannel(
     string Name,
     string Kind,
     string? Token,
-    string? SettingsJson);
+    string? SettingsJson,
+    Guid? AgentId,
+    Guid? AgentTeamId);

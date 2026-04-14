@@ -14,13 +14,17 @@ public record CreateChannelRequest(
     string Kind,
     string Token,
     string? SettingsJson,
+    Guid? AgentId,
+    Guid? AgentTeamId,
     bool StartNow);
 
 public record UpdateChannelRequest(
     string Name,
     string Kind,
     string? Token,
-    string? SettingsJson);
+    string? SettingsJson,
+    Guid? AgentId,
+    Guid? AgentTeamId);
 
 public record ChannelResponse(
     Guid Id,
@@ -28,6 +32,8 @@ public record ChannelResponse(
     string Kind,
     string Status,
     string? SettingsJson,
+    Guid? AgentId,
+    Guid? AgentTeamId,
     bool HasCredentials,
     string CreatedBy,
     DateTimeOffset CreatedOn,

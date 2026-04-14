@@ -1,17 +1,20 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect } from "react"
-import { Controller, type Resolver, useForm } from "react-hook-form"
+import { Controller, type Resolver, useForm, useWatch } from "react-hook-form"
+import { useTranslation } from "react-i18next"
+import type { z } from "zod"
 
 import type { CreateProviderModel } from "@/@types/models"
 import { ControlledField } from "@/components/form/controlled-field"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
@@ -19,10 +22,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useTranslation } from "react-i18next"
-import type { z } from "zod"
+import { providerData } from "@/constants/data"
 
 type ProviderFormValues = CreateProviderModel
+
+// _modelSelect is internal UI state stored in form to avoid useState-in-effect issues
+type ProviderFormInternalValues = ProviderFormValues & { _modelSelect: string }
 
 type ProviderFormProps = {
   initialValues?: Partial<ProviderFormValues>
@@ -32,13 +37,19 @@ type ProviderFormProps = {
   onSubmit: (values: ProviderFormValues) => void
 }
 
-const emptyValues: ProviderFormValues = {
+const emptyValues: ProviderFormInternalValues = {
   name: "",
   provider: "openai",
   model: "",
   apiKey: "",
   baseUrl: "",
   active: true,
+  _modelSelect: "",
+}
+
+function resolveModelSelectValue(model: string, knownModels: string[]) {
+  if (!model) return ""
+  return knownModels.includes(model) ? model : "other"
 }
 
 export function ProviderForm({
@@ -49,34 +60,61 @@ export function ProviderForm({
   onSubmit,
 }: ProviderFormProps) {
   const { t } = useTranslation()
-  const form = useForm<ProviderFormValues>({
-    resolver: zodResolver(
-      schema as never
-    ) as unknown as Resolver<ProviderFormValues>,
+
+  const form = useForm<ProviderFormInternalValues>({
+    resolver: zodResolver(schema as never) as unknown as Resolver<ProviderFormInternalValues>,
     defaultValues: {
       ...emptyValues,
       ...initialValues,
+      _modelSelect: resolveModelSelectValue(
+        initialValues?.model ?? "",
+        providerData.find((p) => p.value === initialValues?.provider)?.models ?? []
+      ),
     },
   })
 
+  const selectedProvider = useWatch({ control: form.control, name: "provider" })
+  const currentModel = useWatch({ control: form.control, name: "model" })
+  const modelSelectValue = useWatch({ control: form.control, name: "_modelSelect" })
+
+  const providerModels =
+    providerData.find((p) => p.value === selectedProvider)?.models ?? []
+
   useEffect(() => {
+    const models =
+      providerData.find((p) => p.value === initialValues?.provider)?.models ?? []
     form.reset({
       ...emptyValues,
       ...initialValues,
+      _modelSelect: resolveModelSelectValue(initialValues?.model ?? "", models),
     })
   }, [form, initialValues])
 
-  const selectedProvider = form.watch("provider")
+  function handleProviderChange(value: string, fieldOnChange: (v: string) => void) {
+    fieldOnChange(value)
+    form.setValue("model", "")
+    form.setValue("_modelSelect", "")
+  }
 
-  const apiKeyPlaceholder =
-    selectedProvider === "openai"
-      ? t("providers.form.apiKeyPlaceholder")
-      : t("providers.form.apiKeyPlaceholder")
+  function handleModelSelectChange(value: string) {
+    form.setValue("_modelSelect", value)
+    if (value !== "other") {
+      form.setValue("model", value, { shouldValidate: true })
+    } else {
+      form.setValue("model", "", { shouldValidate: false })
+    }
+  }
+
+  const isOtherModel = modelSelectValue === "other"
 
   return (
     <form
       className="flex flex-col gap-6"
-      onSubmit={form.handleSubmit((values) => onSubmit(values))}
+      onSubmit={form.handleSubmit((values) => {
+        const { _modelSelect, ...rest } = values
+        void _modelSelect
+        onSubmit(rest)
+      })}
     >
       <FieldGroup>
         <div className="grid gap-5 md:grid-cols-2">
@@ -93,16 +131,19 @@ export function ProviderForm({
             render={({ field }) => (
               <Field>
                 <FieldLabel>{t("providers.form.provider")}</FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select
+                  value={field.value}
+                  onValueChange={(v) => handleProviderChange(v, field.onChange)}
+                >
                   <SelectTrigger>
-                    <SelectValue
-                      placeholder={t("providers.form.selectProvider")}
-                    />
+                    <SelectValue placeholder={t("providers.form.selectProvider")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="openai">ChatGPT / OpenAI</SelectItem>
-                    <SelectItem value="deepseek">DeepSeek</SelectItem>
-                    <SelectItem value="gemini">Gemini</SelectItem>
+                    {providerData.map((p) => (
+                      <SelectItem key={p.value} value={p.value}>
+                        {p.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </Field>
@@ -111,12 +152,41 @@ export function ProviderForm({
         </div>
 
         <div className="grid gap-5 md:grid-cols-2">
-          <ControlledField
-            name="model"
-            control={form.control}
-            label={t("providers.form.model")}
-            placeholder={t("providers.form.modelPlaceholder")}
-          />
+          <Field>
+            <FieldLabel>{t("providers.form.model")}</FieldLabel>
+            <Select value={modelSelectValue} onValueChange={handleModelSelectChange}>
+              <SelectTrigger>
+                <SelectValue placeholder={t("providers.form.modelPlaceholder")} />
+              </SelectTrigger>
+              <SelectContent>
+                {providerModels.map((m) => (
+                  <SelectItem key={m} value={m}>
+                    {m}
+                  </SelectItem>
+                ))}
+                <SelectItem value="other">
+                  {t("providers.form.modelOther", { defaultValue: "Other..." })}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            {isOtherModel && (
+              <Input
+                className="mt-2"
+                value={currentModel}
+                placeholder={t("providers.form.modelCustomPlaceholder", {
+                  defaultValue: "Enter model name...",
+                })}
+                onChange={(e) =>
+                  form.setValue("model", e.target.value, { shouldValidate: true })
+                }
+              />
+            )}
+            {form.formState.errors.model && (
+              <p className="text-sm text-destructive">
+                {form.formState.errors.model.message}
+              </p>
+            )}
+          </Field>
 
           <ControlledField
             name="baseUrl"
@@ -130,7 +200,7 @@ export function ProviderForm({
           name="apiKey"
           control={form.control}
           label={t("providers.form.apiKey")}
-          placeholder={apiKeyPlaceholder}
+          placeholder={t("providers.form.apiKeyPlaceholder")}
           description={
             isEdit
               ? t("providers.form.apiKeyUpdateHelp")

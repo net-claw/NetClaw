@@ -620,6 +620,18 @@ public sealed class ProviderRoutingChatClient(
         return string.IsNullOrWhiteSpace(query) ? null : query;
     }
 
+    private string? TryGetSelectedChannelId(ChatOptions? options)
+    {
+        if (options?.AdditionalProperties is not null &&
+            options.AdditionalProperties.TryGetValue("selected_channel_id", out var v) && v is not null)
+        {
+            return v.ToString();
+        }
+
+        var query = httpContextAccessor.HttpContext?.Request.Query["channel_id"].FirstOrDefault();
+        return string.IsNullOrWhiteSpace(query) ? null : query;
+    }
+
     private ProviderSelection ResolveSelection(AgentRuntimeContext? agentContext, string? requestedModel)
     {
         if (agentContext is not null)
@@ -1003,7 +1015,7 @@ public sealed class ProviderRoutingChatClient(
             return new ConversationTarget("agent", aid);
         }
 
-        var channelId = httpContextAccessor.HttpContext?.Request.Query["channel_id"].FirstOrDefault();
+        var channelId = TryGetSelectedChannelId(options);
         return Guid.TryParse(channelId, out var cid)
             ? new ConversationTarget("channel", cid)
             : new ConversationTarget(null, null);

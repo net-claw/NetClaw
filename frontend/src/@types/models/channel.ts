@@ -23,6 +23,8 @@ export const createChannelSchema = z.object({
   kind: z.enum(channelKinds),
   token: z.string().min(1, "validation.required"),
   settingsJson: z.string().optional(),
+  agentId: z.string().optional(),
+  agentTeamId: z.string().optional(),
   startNow: z.boolean().default(false),
 })
 
@@ -40,6 +42,8 @@ export const channelSchema = z.object({
   kind: z.enum(channelKinds),
   status: z.enum(channelStatuses),
   settingsJson: z.string().nullable().optional(),
+  agentId: z.string().nullable().optional(),
+  agentTeamId: z.string().nullable().optional(),
   hasCredentials: z.boolean(),
   createdBy: z.string(),
   createdOn: z.string(),
