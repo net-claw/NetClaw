@@ -1,4 +1,4 @@
-# Frontend Conventions
+# Frontend Conventions document
 
 This document captures the working conventions used in `web/`.
 
