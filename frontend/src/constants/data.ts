@@ -29,6 +29,31 @@ export const providerData = [
     label: "Mistral",
     models: ["mistral-medium-latest"],
   },
+  {
+    image: "/images/providers/xai.png",
+    value: "xai",
+    label: "xAI",
+    models: ["grok-4-1-fast-non-reasoning"],
+  },
+  {
+    image: "/images/providers/groq.png",
+    value: "groq",
+    label: "Groq",
+    models: ["openai/gpt-oss-120b"],
+  },
+
+  {
+    image: "/images/providers/anthropic.jpg",
+    value: "anthropic",
+    label: "Anthropic",
+    models: ["claude-sonnet-4-6"],
+  },
+  {
+    image: "/images/providers/openrouter.png",
+    value: "openrouter",
+    label: "OpenRouter",
+    models: ["minimax/minimax-m2.5:free"],
+  },
 ]
 
 export const channelData = [

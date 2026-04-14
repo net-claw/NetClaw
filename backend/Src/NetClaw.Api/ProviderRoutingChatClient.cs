@@ -941,6 +941,10 @@ public sealed class ProviderRoutingChatClient(
             "openai" => "https://api.openai.com/v1",
             "deepseek" => "https://api.deepseek.com/v1",
             "gemini" => "https://generativelanguage.googleapis.com/v1beta/openai/",
+            "xai" => "https://api.x.ai/v1",
+            "groq" => "https://api.groq.com/openai/v1",
+            "anthropic" => "https://api.anthropic.com/v1",
+            "openrouter" => "https://openrouter.ai/api/v1",
             _ => throw new InvalidOperationException($"Provider type '{providerType}' requires a BaseUrl.")
         };
 

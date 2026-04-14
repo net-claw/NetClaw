@@ -7,6 +7,10 @@ export const providerTypes = [
   "deepseek",
   "gemini",
   "mistral",
+  "xai",
+  "groq",
+  "anthropic",
+  "openrouter",
 ] as const
 
 export const createProviderSchema = z.object({
