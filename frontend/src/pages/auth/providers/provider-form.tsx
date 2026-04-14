@@ -62,27 +62,34 @@ export function ProviderForm({
   const { t } = useTranslation()
 
   const form = useForm<ProviderFormInternalValues>({
-    resolver: zodResolver(schema as never) as unknown as Resolver<ProviderFormInternalValues>,
+    resolver: zodResolver(
+      schema as never
+    ) as unknown as Resolver<ProviderFormInternalValues>,
     defaultValues: {
       ...emptyValues,
       ...initialValues,
       _modelSelect: resolveModelSelectValue(
         initialValues?.model ?? "",
-        providerData.find((p) => p.value === initialValues?.provider)?.models ?? []
+        providerData.find((p) => p.value === initialValues?.provider)?.models ??
+          []
       ),
     },
   })
 
   const selectedProvider = useWatch({ control: form.control, name: "provider" })
   const currentModel = useWatch({ control: form.control, name: "model" })
-  const modelSelectValue = useWatch({ control: form.control, name: "_modelSelect" })
+  const modelSelectValue = useWatch({
+    control: form.control,
+    name: "_modelSelect",
+  })
 
   const providerModels =
     providerData.find((p) => p.value === selectedProvider)?.models ?? []
 
   useEffect(() => {
     const models =
-      providerData.find((p) => p.value === initialValues?.provider)?.models ?? []
+      providerData.find((p) => p.value === initialValues?.provider)?.models ??
+      []
     form.reset({
       ...emptyValues,
       ...initialValues,
@@ -90,7 +97,10 @@ export function ProviderForm({
     })
   }, [form, initialValues])
 
-  function handleProviderChange(value: string, fieldOnChange: (v: string) => void) {
+  function handleProviderChange(
+    value: string,
+    fieldOnChange: (v: string) => void
+  ) {
     fieldOnChange(value)
     form.setValue("model", "")
     form.setValue("_modelSelect", "")
@@ -136,12 +146,23 @@ export function ProviderForm({
                   onValueChange={(v) => handleProviderChange(v, field.onChange)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder={t("providers.form.selectProvider")} />
+                    <SelectValue
+                      placeholder={t("providers.form.selectProvider")}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {providerData.map((p) => (
                       <SelectItem key={p.value} value={p.value}>
-                        {p.label}
+                        <div className="flex items-center gap-2">
+                          {p.image && (
+                            <img
+                              src={p.image}
+                              alt={p.label}
+                              className="h-8 w-8 object-contain"
+                            />
+                          )}
+                          {p.label}
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -154,9 +175,14 @@ export function ProviderForm({
         <div className="grid gap-5 md:grid-cols-2">
           <Field>
             <FieldLabel>{t("providers.form.model")}</FieldLabel>
-            <Select value={modelSelectValue} onValueChange={handleModelSelectChange}>
+            <Select
+              value={modelSelectValue}
+              onValueChange={handleModelSelectChange}
+            >
               <SelectTrigger>
-                <SelectValue placeholder={t("providers.form.modelPlaceholder")} />
+                <SelectValue
+                  placeholder={t("providers.form.modelPlaceholder")}
+                />
               </SelectTrigger>
               <SelectContent>
                 {providerModels.map((m) => (
@@ -177,7 +203,9 @@ export function ProviderForm({
                   defaultValue: "Enter model name...",
                 })}
                 onChange={(e) =>
-                  form.setValue("model", e.target.value, { shouldValidate: true })
+                  form.setValue("model", e.target.value, {
+                    shouldValidate: true,
+                  })
                 }
               />
             )}

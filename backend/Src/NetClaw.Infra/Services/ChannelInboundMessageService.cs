@@ -69,11 +69,19 @@ internal sealed class ChannelInboundMessageService(
             options.AdditionalProperties["selected_agent_id"] = channel.AgentId.Value.ToString();
         }
 
-        var response = await chatClient.GetResponseAsync(
-            [new ChatMessage(ChatRole.User, text)],
-            options,
-            cancellationToken);
+        try
+        {
+            var response = await chatClient.GetResponseAsync(
+                [new ChatMessage(ChatRole.User, text)],
+                options,
+                cancellationToken);
 
-        return response.Text ?? string.Empty;
+            return response.Text ?? string.Empty;
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Failed to process inbound message");
+            return e.Message;
+        }
     }
 }
