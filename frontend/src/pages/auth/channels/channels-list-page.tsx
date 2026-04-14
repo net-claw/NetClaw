@@ -6,6 +6,7 @@ import { DeleteConfirmDialog } from "@/components/delete-confirm-dialog"
 import { PageHeaderCard } from "@/components/share/cards/page-header-card"
 import { SectionCard } from "@/components/share/cards/section-card"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   InputGroup,
   InputGroupAddon,
@@ -28,6 +29,7 @@ import {
   useStopChannel,
 } from "@/hooks/api/use-channel"
 import { actionIcons, appIcons } from "@/lib/icons"
+import { channelData } from "@/constants/data"
 
 export default function ChannelsListPage() {
   const { t } = useTranslation()
@@ -151,12 +153,11 @@ export default function ChannelsListPage() {
               {channels.map((channel) => (
                 <TableRow key={channel.id}>
                   <TableCell>
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       checked={selectedIdSet.has(channel.id)}
-                      onChange={(event) => {
+                      onCheckedChange={(checked) => {
                         setSelectedIds((current) =>
-                          event.target.checked
+                          checked
                             ? [...current, channel.id]
                             : current.filter((id) => id !== channel.id)
                         )
@@ -164,9 +165,20 @@ export default function ChannelsListPage() {
                     />
                   </TableCell>
                   <TableCell className="font-medium">{channel.name}</TableCell>
-                  <TableCell>{channel.kind}</TableCell>
+                  <TableCell className="flex items-center gap-x-2">
+                    <img
+                      src={
+                        channelData.find((c) => c.value === channel.kind)?.image
+                      }
+                      alt={channel.kind}
+                      className="h-8 w-8 rounded-lg"
+                    />
+                    {channel.kind}
+                  </TableCell>
                   <TableCell>{channel.status}</TableCell>
-                  <TableCell>{channel.updatedOn ?? channel.createdOn}</TableCell>
+                  <TableCell>
+                    {channel.updatedOn ?? channel.createdOn}
+                  </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-2">
                       <Button asChild size="sm" variant="outline">

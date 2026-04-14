@@ -2,8 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
 import { Controller, type Resolver, useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
-import { z } from "zod"
 import type { z as zType } from "zod"
+import { z } from "zod"
 
 import type { CreateChannelModel } from "@/@types/models"
 import { ControlledField } from "@/components/form/controlled-field"
@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { channelData } from "@/constants/data"
 
 type ChannelFormInternalValues = CreateChannelModel & { appToken?: string }
 
@@ -53,9 +54,10 @@ export function ChannelForm({
     "create"
   )
 
-  const extendedSchema = schema instanceof z.ZodObject
-    ? schema.extend({ appToken: z.string().optional() })
-    : schema
+  const extendedSchema =
+    schema instanceof z.ZodObject
+      ? schema.extend({ appToken: z.string().optional() })
+      : schema
 
   const form = useForm<ChannelFormInternalValues>({
     resolver: zodResolver(
@@ -82,10 +84,7 @@ export function ChannelForm({
     if (rest.kind === "slack" && appToken) {
       token = JSON.stringify({ BotToken: token, AppToken: appToken })
     }
-    onSubmit(
-      { ...rest, token },
-      !isEdit && submitMode === "create-and-start"
-    )
+    onSubmit({ ...rest, token }, !isEdit && submitMode === "create-and-start")
   })
 
   return (
@@ -112,21 +111,18 @@ export function ChannelForm({
                     />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="telegram">
-                      {t("channels.options.kind.telegram")}
-                    </SelectItem>
-                    <SelectItem value="discord">
-                      {t("channels.options.kind.discord")}
-                    </SelectItem>
-                    <SelectItem value="whatsapp">
-                      {t("channels.options.kind.whatsapp")}
-                    </SelectItem>
-                    <SelectItem value="slack">
-                      {t("channels.options.kind.slack")}
-                    </SelectItem>
-                    <SelectItem value="web">
-                      {t("channels.options.kind.web")}
-                    </SelectItem>
+                    {channelData.map((channel) => (
+                      <SelectItem key={channel.value} value={channel.value}>
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={channel.image}
+                            alt={channel.label}
+                            className="h-6 w-6"
+                          />
+                          <span>{channel.label}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </Field>
@@ -165,7 +161,11 @@ export function ChannelForm({
           control={form.control}
           label={t("channels.form.settingsJson")}
           placeholder={t("channels.form.settingsJsonPlaceholder")}
-          description={<FieldDescription>{t("channels.form.settingsJsonHelp")}</FieldDescription>}
+          description={
+            <FieldDescription>
+              {t("channels.form.settingsJsonHelp")}
+            </FieldDescription>
+          }
           multiline
           rows={6}
         />
