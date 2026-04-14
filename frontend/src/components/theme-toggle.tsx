@@ -35,7 +35,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="relative h-8 w-16 rounded-full bg-linear-to-r from-amber-200 to-orange-300 p-0.5 shadow-lg transition-all duration-700 ease-in-out hover:shadow-xl focus:outline-none dark:from-indigo-900 dark:to-slate-900"
+      className="relative h-7 w-14 rounded-full bg-linear-to-r from-amber-200 to-orange-300 p-0.5 shadow-lg transition-all duration-700 ease-in-out hover:shadow-xl focus:outline-none dark:from-indigo-900 dark:to-slate-900"
       aria-label="Toggle theme"
     >
       <AnimatePresence>
@@ -111,9 +111,9 @@ export function ThemeToggle() {
 
       <motion.div
         layout
-        className="relative z-10 flex h-7 w-7 items-center justify-center rounded-full shadow-md"
+        className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full shadow-md"
         animate={{
-          x: isDark ? 32 : 0,
+          x: isDark ? 28 : 0,
           backgroundColor: isDark ? "#1e1b4b" : "#fbbf24",
         }}
         transition={{
@@ -131,7 +131,7 @@ export function ThemeToggle() {
               exit={{ rotate: 90, scale: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <Moon className="h-4 w-4 text-indigo-200" strokeWidth={1.5} />
+              <Moon className="h-3.5 w-3.5 text-indigo-200" strokeWidth={1.5} />
             </motion.div>
           ) : (
             <motion.div
@@ -141,7 +141,7 @@ export function ThemeToggle() {
               exit={{ rotate: -90, scale: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <Sun className="h-4 w-4 text-amber-700" strokeWidth={1.5} />
+              <Sun className="h-3.5 w-3.5 text-amber-700" strokeWidth={1.5} />
             </motion.div>
           )}
         </AnimatePresence>
