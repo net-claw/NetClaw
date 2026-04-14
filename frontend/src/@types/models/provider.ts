@@ -11,6 +11,7 @@ export const providerTypes = [
   "groq",
   "anthropic",
   "openrouter",
+  "ollama",
 ] as const
 
 export const createProviderSchema = z.object({

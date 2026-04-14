@@ -11,6 +11,7 @@ import type { ProviderModel } from "@/@types/models"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import type { TFunction } from "i18next"
+import { providerData } from "@/constants/data"
 
 type ProviderColumnsOptions = {
   t: TFunction
@@ -55,7 +56,7 @@ export function getProviderColumns({
           type="button"
           variant="ghost"
           size="sm"
-          className="-ml-2 h-8 px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground hover:bg-transparent hover:text-foreground"
+          className="-ml-2 h-8 px-2 text-xs font-medium tracking-wide text-muted-foreground uppercase hover:bg-transparent hover:text-foreground"
           onClick={() => column.toggleSorting(nameSorted?.desc === false)}
         >
           {t("providers.table.name")}
@@ -70,11 +71,32 @@ export function getProviderColumns({
           )}
         </Button>
       ),
-      cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+      cell: ({ row }) => (
+        <span className="font-medium">{row.original.name}</span>
+      ),
     },
     {
       accessorKey: "providerType",
       header: () => t("providers.table.provider"),
+      cell: ({ row }) => {
+        const providerType = row.original.providerType
+        const imageSrc = providerData.find(
+          (p) => p.value === providerType
+        )?.image
+        return (
+          <div className="flex items-center gap-x-2">
+            {imageSrc && (
+              <img
+                src={imageSrc}
+                alt={providerType}
+                className="h-6 w-6 rounded-md"
+              />
+            )}
+
+            <span className="font-medium">{providerType}</span>
+          </div>
+        )
+      },
     },
     {
       accessorKey: "defaultModel",
@@ -83,10 +105,13 @@ export function getProviderColumns({
     {
       accessorKey: "isActive",
       header: () => t("providers.table.status"),
-      cell: ({ row }) =>
-        row.original.isActive
-          ? t("providers.status.active")
-          : t("providers.status.inactive"),
+      cell: ({ row }) => (
+        <div>
+          {row.original.isActive
+            ? t("providers.status.active")
+            : t("providers.status.inactive")}
+        </div>
+      ),
     },
     {
       id: "updatedAt",
@@ -95,7 +120,7 @@ export function getProviderColumns({
           type="button"
           variant="ghost"
           size="sm"
-          className="-ml-2 h-8 px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground hover:bg-transparent hover:text-foreground"
+          className="-ml-2 h-8 px-2 text-xs font-medium tracking-wide text-muted-foreground uppercase hover:bg-transparent hover:text-foreground"
           onClick={() => column.toggleSorting(updatedAtSorted?.desc === false)}
         >
           {t("providers.table.updatedAt")}

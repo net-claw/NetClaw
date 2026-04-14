@@ -54,6 +54,12 @@ export const providerData = [
     label: "OpenRouter",
     models: ["minimax/minimax-m2.5:free"],
   },
+  {
+    image: "/images/providers/ollama.png",
+    value: "ollama",
+    label: "Ollama",
+    models: ["glm-5.1:cloud"],
+  },
 ]
 
 export const channelData = [
