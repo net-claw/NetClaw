@@ -11,6 +11,7 @@ import type { AgentModel } from "@/@types/models"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import type { TFunction } from "i18next"
+import { providerData } from "@/constants/data"
 
 type AgentColumnsOptions = {
   t: TFunction
@@ -54,7 +55,7 @@ export function getAgentColumns({
           type="button"
           variant="ghost"
           size="sm"
-          className="-ml-2 h-8 px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground hover:bg-transparent hover:text-foreground"
+          className="-ml-2 h-8 px-2 text-xs font-medium tracking-wide text-muted-foreground uppercase hover:bg-transparent hover:text-foreground"
           onClick={() => column.toggleSorting(nameSorted?.desc === false)}
         >
           {t("agents.table.name")}
@@ -72,7 +73,9 @@ export function getAgentColumns({
       cell: ({ row }) => (
         <div>
           <div className="font-medium">{row.original.name}</div>
-          <div className="text-xs text-muted-foreground">{row.original.status}</div>
+          <div className="text-xs text-muted-foreground">
+            {row.original.status}
+          </div>
         </div>
       ),
     },
@@ -91,20 +94,39 @@ export function getAgentColumns({
     {
       id: "providers",
       header: () => t("agents.table.provider"),
-      cell: ({ row }) =>
-        row.original.providers.length > 0
-          ? `${row.original.providers[0].name}${row.original.providers.length > 1 ? ` +${row.original.providers.length - 1}` : ""}`
-          : "-",
+      cell: ({ row }) => {
+        const provider = row.original.providers?.at(0)
+        const imageSrc = providerData.find(
+          (p) => p.value === provider?.provider
+        )?.image
+        return (
+          <div className="flex items-center gap-x-2">
+            {imageSrc && (
+              <img
+                src={imageSrc}
+                alt={provider?.provider}
+                className="h-6 w-6 rounded-md"
+              />
+            )}
+            <div className="font-medium">{provider ? provider.name : "-"}</div>
+          </div>
+        )
+      },
     },
     {
       id: "actions",
       enableSorting: false,
       enableHiding: false,
-      header: () => <div className="text-right">{t("agents.table.actions")}</div>,
+      header: () => (
+        <div className="text-right">{t("agents.table.actions")}</div>
+      ),
       cell: ({ row }) => (
         <div className="text-right">
           <Button asChild size="sm" variant="outline">
-            <Link to="/agents/$agentId/edit" params={{ agentId: row.original.id }}>
+            <Link
+              to="/agents/$agentId/edit"
+              params={{ agentId: row.original.id }}
+            >
               <SquarePenIcon data-icon="inline-start" />
               {t("identity.actions.edit")}
             </Link>

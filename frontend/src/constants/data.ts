@@ -6,13 +6,13 @@ export const providerData = [
     models: ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"],
   },
   {
-    image: "/images/providers/deepseek.webp",
+    image: "/images/providers/deepseek.png",
     value: "deepseek",
     label: "DeepSeek",
     models: ["deepseek-chat", "deepseek-reasoner"],
   },
   {
-    image: "/images/providers/gemini.webp",
+    image: "/images/providers/gemini.png",
     value: "gemini",
     label: "Gemini",
     models: [
@@ -24,7 +24,7 @@ export const providerData = [
     ],
   },
   {
-    image: "/images/providers/mistral.webp",
+    image: "/images/providers/mistral.png",
     value: "mistral",
     label: "Mistral",
     models: ["mistral-medium-latest"],
