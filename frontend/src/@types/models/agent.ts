@@ -4,9 +4,9 @@ import type { BaseRequestModel } from "./common"
 
 export const createAgentSchema = z.object({
   name: z.string().min(1, "validation.required"),
-  role: z.string().min(1, "validation.required"),
+  role: z.string().optional().default(""),
   kind: z.string().min(1, "validation.required"),
-  type: z.string().min(1, "validation.required"),
+  type: z.string().optional().default(""),
   status: z
     .string()
     .refine(
@@ -16,7 +16,7 @@ export const createAgentSchema = z.object({
   providerIds: z.array(z.string()).default([]),
   skillIds: z.array(z.string()).default([]),
   modelOverride: z.string().optional(),
-  systemPrompt: z.string().min(1, "validation.required"),
+  systemPrompt: z.string().optional().default(""),
   temperature: z.coerce.number().min(0).max(2).optional(),
   maxTokens: z.coerce.number().int().positive().optional(),
   metadataJson: z.string().optional(),

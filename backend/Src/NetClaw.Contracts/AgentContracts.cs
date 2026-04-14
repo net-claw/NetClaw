@@ -10,28 +10,28 @@ public record GetAgentsRequest(
 
 public record CreateAgentRequest(
     string Name,
-    string Role,
+    string? Role,
     string Kind,
-    string Type,
+    string? Type,
     string Status,
     IReadOnlyList<string> ProviderIds,
     IReadOnlyList<string> SkillIds,
     string? ModelOverride,
-    string SystemPrompt,
+    string? SystemPrompt,
     double? Temperature,
     int? MaxTokens,
     string? MetadataJson);
 
 public record UpdateAgentRequest(
     string Name,
-    string Role,
+    string? Role,
     string Kind,
-    string Type,
+    string? Type,
     string Status,
     IReadOnlyList<string> ProviderIds,
     IReadOnlyList<string> SkillIds,
     string? ModelOverride,
-    string SystemPrompt,
+    string? SystemPrompt,
     double? Temperature,
     int? MaxTokens,
     string? MetadataJson);

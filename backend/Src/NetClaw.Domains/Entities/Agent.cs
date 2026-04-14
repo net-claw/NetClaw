@@ -8,11 +8,11 @@ public class Agent : AggregateRoot
 {
     public Agent(
         string name,
-        string role,
+        string? role,
         string kind,
-        string type,
+        string? type,
         string status,
-        string systemPrompt,
+        string? systemPrompt,
         string? modelOverride = null,
         double? temperature = null,
         int? maxTokens = null,
@@ -21,11 +21,11 @@ public class Agent : AggregateRoot
         : base(createdBy)
     {
         Name = name.Trim();
-        Role = role.Trim();
+        Role = NormalizeOptionalText(role);
         Kind = kind.Trim().ToLowerInvariant();
-        Type = type.Trim();
+        Type = NormalizeOptionalText(type);
         Status = status.Trim().ToLowerInvariant();
-        SystemPrompt = systemPrompt.Trim();
+        SystemPrompt = NormalizeOptionalText(systemPrompt);
         ModelOverride = string.IsNullOrWhiteSpace(modelOverride) ? null : modelOverride.Trim();
         Temperature = temperature;
         MaxTokens = maxTokens;
@@ -64,11 +64,11 @@ public class Agent : AggregateRoot
 
     public void Update(
         string name,
-        string role,
+        string? role,
         string kind,
-        string type,
+        string? type,
         string status,
-        string systemPrompt,
+        string? systemPrompt,
         string? modelOverride,
         double? temperature,
         int? maxTokens,
@@ -76,15 +76,18 @@ public class Agent : AggregateRoot
         string? updatedBy = null)
     {
         Name = name.Trim();
-        Role = role.Trim();
+        Role = NormalizeOptionalText(role);
         Kind = kind.Trim().ToLowerInvariant();
-        Type = type.Trim();
+        Type = NormalizeOptionalText(type);
         Status = status.Trim().ToLowerInvariant();
-        SystemPrompt = systemPrompt.Trim();
+        SystemPrompt = NormalizeOptionalText(systemPrompt);
         ModelOverride = string.IsNullOrWhiteSpace(modelOverride) ? null : modelOverride.Trim();
         Temperature = temperature;
         MaxTokens = maxTokens;
         MetadataJson = string.IsNullOrWhiteSpace(metadataJson) ? null : metadataJson.Trim();
         SetUpdatedBy(updatedBy ?? "System");
     }
+
+    private static string NormalizeOptionalText(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? string.Empty : value.Trim();
 }

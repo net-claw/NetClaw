@@ -68,7 +68,7 @@ export function getChannelColumns({
           type="button"
           variant="ghost"
           size="sm"
-          className="-ml-2 h-8 px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground hover:bg-transparent hover:text-foreground"
+          className="-ml-2 h-8 px-2 text-xs font-medium tracking-wide text-muted-foreground uppercase hover:bg-transparent hover:text-foreground"
           onClick={() => column.toggleSorting(nameSorted?.desc === false)}
         >
           {t("channels.table.name")}
@@ -83,7 +83,9 @@ export function getChannelColumns({
           )}
         </Button>
       ),
-      cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+      cell: ({ row }) => (
+        <span className="font-medium">{row.original.name}</span>
+      ),
     },
     {
       accessorKey: "kind",
@@ -91,7 +93,10 @@ export function getChannelColumns({
       cell: ({ row }) => (
         <div className="flex items-center gap-x-2">
           <img
-            src={channelData.find((item) => item.value === row.original.kind)?.image}
+            src={
+              channelData.find((item) => item.value === row.original.kind)
+                ?.image
+            }
             alt={row.original.kind}
             className="h-8 w-8 rounded-lg"
           />
@@ -102,6 +107,22 @@ export function getChannelColumns({
     {
       accessorKey: "status",
       header: () => t("channels.table.status"),
+      cell: ({ row }) => {
+        const status = row.original.status
+        const dotColor: Record<string, string> = {
+          running: "bg-green-500",
+          starting: "bg-yellow-400 animate-pulse",
+          stopping: "bg-yellow-400 animate-pulse",
+          stopped: "bg-zinc-400",
+          error: "bg-red-500",
+        }
+        return (
+          <div className="flex items-center gap-x-2">
+            <span className={`h-2 w-2 rounded-full ${dotColor[status] ?? "bg-zinc-400"}`} />
+            <span>{t(`channels.statuses.${status}`, { defaultValue: status })}</span>
+          </div>
+        )
+      },
     },
     {
       id: "updatedAt",
@@ -110,7 +131,7 @@ export function getChannelColumns({
           type="button"
           variant="ghost"
           size="sm"
-          className="-ml-2 h-8 px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground hover:bg-transparent hover:text-foreground"
+          className="-ml-2 h-8 px-2 text-xs font-medium tracking-wide text-muted-foreground uppercase hover:bg-transparent hover:text-foreground"
           onClick={() => column.toggleSorting(updatedAtSorted?.desc === false)}
         >
           {t("channels.table.updatedAt")}
@@ -134,48 +155,61 @@ export function getChannelColumns({
       header: () => (
         <div className="text-right">{t("channels.table.actions")}</div>
       ),
-      cell: ({ row }) => (
-        <div className="flex justify-end">
-          <div className="flex flex-wrap justify-end gap-2">
-            <Button asChild size="sm" variant="outline">
-              <Link
-                to="/channels/$channelId/edit"
-                params={{ channelId: row.original.id }}
-              >
-                <SquarePenIcon data-icon="inline-start" />
-                {t("identity.actions.edit")}
-              </Link>
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              disabled={startPending}
-              onClick={() => onStart(row.original.id)}
-            >
-              {t("channels.actions.start")}
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              disabled={stopPending}
-              onClick={() => onStop(row.original.id)}
-            >
-              {t("channels.actions.stop")}
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              disabled={restartPending}
-              onClick={() => onRestart(row.original.id)}
-            >
-              {t("channels.actions.restart")}
-            </Button>
+      cell: ({ row }) => {
+        const status = row.original.status
+        const isTransitioning = status === "starting" || status === "stopping"
+        const canStart = status === "stopped" || status === "error"
+        const canStop = status === "running"
+        const canRestart = status === "running" || status === "error"
+        return (
+          <div className="flex justify-end">
+            <div className="flex flex-wrap justify-end gap-2">
+              <Button asChild size="sm" variant="outline">
+                <Link
+                  to="/channels/$channelId/edit"
+                  params={{ channelId: row.original.id }}
+                >
+                  <SquarePenIcon data-icon="inline-start" />
+                  {t("identity.actions.edit")}
+                </Link>
+              </Button>
+              {canStart && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  disabled={startPending || isTransitioning}
+                  onClick={() => onStart(row.original.id)}
+                >
+                  {t("channels.actions.start")}
+                </Button>
+              )}
+              {canStop && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  disabled={stopPending || isTransitioning}
+                  onClick={() => onStop(row.original.id)}
+                >
+                  {t("channels.actions.stop")}
+                </Button>
+              )}
+              {canRestart && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  disabled={restartPending || isTransitioning}
+                  onClick={() => onRestart(row.original.id)}
+                >
+                  {t("channels.actions.restart")}
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
-      ),
+        )
+      },
     },
   ]
 }
