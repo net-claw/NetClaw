@@ -2,7 +2,12 @@ import { z } from "zod"
 
 import type { BaseRequestModel } from "./common"
 
-export const providerTypes = ["openai", "deepseek", "gemini"] as const
+export const providerTypes = [
+  "openai",
+  "deepseek",
+  "gemini",
+  "mistral",
+] as const
 
 export const createProviderSchema = z.object({
   name: z.string().min(1, "validation.required"),

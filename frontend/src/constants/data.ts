@@ -27,7 +27,7 @@ export const providerData = [
     image: "/images/providers/mistral.webp",
     value: "mistral",
     label: "Mistral",
-    models: ["mistral-7b"],
+    models: ["mistral-medium-latest"],
   },
 ]
 
